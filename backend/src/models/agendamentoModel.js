@@ -67,10 +67,18 @@ const findConflictingAgendamentos = async (startTime, durationInMinutes) => {
     return conflicts;
 };
 
+const getAgendamentosPorData = async (data) => {
+    // Busca agendamentos que começam no dia especificado (ignora a hora).
+    const query = 'SELECT data_hora FROM agendamentos WHERE DATE(data_hora) = ?';
+    const [agendamentos] = await connection.execute(query, [data]);
+    return agendamentos;
+};
+
 module.exports = {
     getAll,
     createAgendamento,
     deleteAgendamento,
     updateAgendamento,
     findConflictingAgendamentos,
+    getAgendamentosPorData,
 };

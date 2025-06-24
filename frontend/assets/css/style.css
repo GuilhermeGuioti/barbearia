@@ -1,0 +1,271 @@
+/* --- 1. CONFIGURAÇÕES GLOBAIS E BODY --- */
+* {
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+    font-family: 'Montserrat', sans-serif;
+}
+
+body {
+    background-image: url(../imgs/folhas-da-planta-monstera-deliciosa-molhada-em-um-jardim.jpg);
+    background-size: cover;
+    background-position: center;
+    color: #fff;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    padding: 20px;
+}
+
+
+/* --- 2. LAYOUT PRINCIPAL E TÍTULOS --- */
+.booking_container {
+    width: 100%;
+    max-width: 450px;
+}
+
+.booking_title {
+    text-align: center;
+    margin-bottom: 40px;
+}
+
+.booking_title h1 {
+    font-family: 'Lobster', cursive;
+    font-size: 4.5rem; 
+    font-weight: 400;
+    line-height: 1;
+    margin-bottom: 0;
+    letter-spacing: 2px;
+    color: #ffffff;
+}
+
+.booking_title h2 {
+    font-size: 1.5rem; 
+    font-weight: 700;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    margin-top: 5px;
+    color: #ddd;
+}
+
+.booking_subtitle {
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.booking_subtitle h3 {
+    font-size: 1.8rem;
+    font-weight: 700;
+    margin-bottom: 10px;
+}
+
+.booking_subtitle p {
+    font-size: 0.9rem;
+    color: #b0b0b0;
+    line-height: 1.4;
+    margin-bottom: 0;
+}
+
+
+/* --- 3. ESTRUTURA DO FORMULÁRIO --- */
+.booking_options form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+/* Estilo base para os contêineres dos campos */
+.form_name, .form_service, .form_data, .form_phone {
+    background-color: #2a2a2a;
+    border-radius: 12px;
+    padding: 15px;
+    display: flex;
+    align-items: center;
+    border: 1px solid #3a3a3a;
+}
+
+
+/* --- 4. ESTILOS GERAIS DOS CAMPOS (Ícones e Inputs) --- */
+
+/* Estilo para os ícones */
+.form_name i, .form_service i, .form_data i, .form_phone i {
+    color: #b0b0b0;
+    margin-right: 15px;
+    font-size: 1.1rem;
+    width: 20px;
+    text-align: center;
+}
+
+/* Estilo para os inputs (texto, telefone, data) */
+.form_name input, .form_data input, .form_phone input {
+    background: none;
+    border: none;
+    color: #e0e0e0;
+    font-size: 1rem;
+    width: 100%;
+    outline: none;
+}
+
+.form_name input::placeholder {
+    color: #888;
+}
+
+/* Estilos específicos para o input de data */
+.form_data input {
+    cursor: pointer;
+}
+
+.form_data input[type="date"]::-webkit-calendar-picker-indicator {
+    cursor: pointer;
+    opacity: 0.6;
+    filter: invert(1);
+    font-size: 1.2rem;
+    padding-right: .85rem; 
+}
+
+.form_data input[type="date"]::-webkit-calendar-picker-indicator:hover {
+    opacity: 0.8;
+}
+
+
+/* --- 5. COMPONENTE: SELECT DE SERVIÇO CUSTOMIZADO --- */
+.custom-select-wrapper {
+    position: relative;
+    cursor: pointer;
+    width: 100%;
+    display: flex;
+    align-items: center;
+}
+
+.custom-select {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+}
+
+.custom-select .select-text {
+    color: #e0e0e0;
+}
+
+.custom-select .select-text.placeholder {
+    color: #888;
+}
+
+.custom-select .select-arrow {
+    font-size: 0.9rem;
+    color: #b0b0b0;
+    transition: transform 0.3s ease;
+}
+
+.custom-select-wrapper.open .select-arrow {
+    transform: rotate(180deg);
+}
+
+.custom-options {
+    display: none;
+    position: absolute;
+    top: calc(100% + 10px);
+    left: 0;
+    right: 0;
+    background-color: #2a2a2a;
+    border: 1px solid #3a3a3a;
+    border-radius: 12px;
+    overflow: hidden;
+    z-index: 10;
+}
+
+.custom-select-wrapper.open .custom-options {
+    display: block;
+}
+
+.custom-option {
+    padding: 15px 20px;
+    color: #e0e0e0;
+    transition: background-color 0.2s ease;
+}
+
+.custom-option:hover {
+    background-color: #3f3f3f;
+}
+
+
+/* --- 6. COMPONENTE: HORÁRIOS DISPONÍVEIS --- */
+#horarios-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-top: 5px;
+    padding: 15px 0;
+    justify-content: center;
+    border-top: 1px solid #3a3a3a;
+}
+
+.horario-btn.selecionado {
+    background-color: #5e5e5e;
+    color: #ffffff;
+    border: 1px solid #777777;
+    font-weight: bold;
+    transform: scale(1.05);
+    box-shadow: 0 0 15px rgba(255, 255, 255, 0.3);
+}
+
+
+/* --- 7. BOTÃO DE AGENDAMENTO PRINCIPAL --- */
+.booking_options button {
+    background-color: #4a4a4a;
+    color: #e0e0e0;
+    font-size: 1.1rem;
+    font-weight: 700;
+    padding: 18px;
+    border: none;
+    border-radius: 12px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    margin-top: 15px;
+}
+
+.booking_options button:hover {
+    background-color: #5e5e5e;
+    transform: scale(1.02);
+}
+
+
+/* --- 8. ESTILOS ESPECIAIS DO NAVEGADOR E LEGADO --- */
+
+/* Comportamento de Autopreenchimento (Autofill) */
+input:-webkit-autofill,
+input:-webkit-autofill:hover, 
+input:-webkit-autofill:focus, 
+input:-webkit-autofill:active {
+    -webkit-text-fill-color: #e0e0e0;
+    -webkit-box-shadow: 0 0 0 30px #2a2a2a inset !important;
+    transition: background-color 5000s ease-in-out 0s;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 1rem;
+}
+
+/* Estilo legado para o select nativo (não usado na versão com JS) */
+.form_service select {
+    background: none;
+    border: none;
+    color: #e0e0e0;
+    font-size: 1rem;
+    width: 100%;
+    outline: none;
+    appearance: none;
+    background-image: url('data:image/svg+xml;utf8,<svg fill="%23b0b0b0" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><path d="M7 10l5 5 5-5z"/></svg>');
+    background-repeat: no-repeat;
+    background-position: right 10px center;
+    cursor: pointer;
+}
+
+/* Estilo legado para o input datetime-local (não usado na versão com date + horários) */
+.form_data input[type="datetime-local"]::-webkit-calendar-picker-indicator {
+    cursor: pointer;
+    opacity: 0.6;
+    filter: invert(1);
+    font-size: 1.2rem;
+    padding-right: .85rem;
+}

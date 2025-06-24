@@ -1,5 +1,6 @@
 const express = require('express');
 const agendamentoController = require('./controllers/agendamentoController');
+const disponibilidadeController = require('./controllers/disponibilidadeController');
 const agendamentoMiddlewares = require('./middlewares/agendamentoMiddlewares');
 
 const router = express.Router();
@@ -24,5 +25,8 @@ router.put(
     agendamentoMiddlewares.validateBody, // Reutilizamos o mesmo middleware de validação
     agendamentoController.updateAgendamento
 );
+
+// Rota para verificar horários disponíveis em uma data
+router.get('/disponibilidade', disponibilidadeController.getDisponibilidade);
 
 module.exports = router;

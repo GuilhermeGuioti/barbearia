@@ -72,11 +72,9 @@ const updateAgendamento = async (request, response) => {
     }
 };
 
-
-
 module.exports = {
     createAgendamento,
     getAllAgendamentos,
     deleteAgendamento,
-    updateAgendamento
+    updateAgendamento,
 };
