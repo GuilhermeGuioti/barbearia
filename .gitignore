@@ -1,0 +1,9 @@
+# 1. Dependências do Node.js (O mais importante!)
+# Esta pasta pode ter milhares de arquivos e gigabytes de tamanho.
+# Ela é sempre recriada com o comando "npm install".
+/backend/node_modules
+
+# 2. Arquivos de Ambiente (Segredos)
+# Este arquivo contém senhas e dados sensíveis. NUNCA deve ser enviado!
+# O arquivo .env.example, que é um modelo, PODE ser enviado.
+/backend/.env

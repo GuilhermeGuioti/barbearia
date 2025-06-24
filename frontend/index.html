@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+  <link rel="stylesheet" href="style.css">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Lobster&family=Montserrat:wght@400;700;900&display=swap" rel="stylesheet">
+
+  <title>BarberAgenda</title>
+</head>
+<body>
+  
+  <div class="booking_container">
+    <div class="booking_title">
+      <h1>Felipe</h1>
+      <h2>Barbearia</h2>
+    </div>
+
+    <div class="booking_subtitle">
+      <h3>Agende seu horario</h3>
+      <p>Escolha os serviços que deseja e agende-os no horário que preferir</p>
+    </div>
+
+    <div class="booking_options">
+      <form>
+        <div class="form_name">
+          <i class="fa-solid fa-user"></i>
+          <input type="text" placeholder="Digite seu nome:">
+        </div>
+
+        <div class="form_phone">
+          <i class="fa-solid fa-phone"></i>
+          <input type="tel" placeholder="Digite seu telefone" required>
+        </div>
+
+        <div class="form_service">
+          <div class="custom-select-wrapper">
+            <i class="fa-solid fa-scissors icon-prefix"></i>
+
+            <select id="servico" name="servico" style="display: none;">
+            <option value=""></option>
+            <option value="corte">Corte</option>
+            <option value="barba">Barba</option>
+            <option value="corte_barba">Corte e Barba</option>
+          </select>
+
+          <div class="custom-select">
+            <span class="select-text placeholder">Selecione o serviço</span>
+            <i class="fa-solid fa-chevron-down select-arrow"></i>
+            </div>
+            <div class="custom-options">
+            <div class="custom-option" data-value="corte">Corte</div>
+            <div class="custom-option" data-value="barba">Barba</div>
+            <div class="custom-option" data-value="corte_barba">Corte e Barba</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="form_data">
+          <i class="fa-regular fa-calendar-days"></i>
+          <input type="datetime-local" id="datahora" name="datahora">
+        </div>
+
+        <button>Agendar</button>
+      </form>
+    </div>
+
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
