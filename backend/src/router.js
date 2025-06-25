@@ -1,14 +1,25 @@
 const express = require('express');
+
+// Controladores
 const agendamentoController = require('./controllers/agendamentoController');
 const disponibilidadeController = require('./controllers/disponibilidadeController');
+const usuarioController = require('./controllers/usuarioController');
+
+// Middlewares
 const agendamentoMiddlewares = require('./middlewares/agendamentoMiddlewares');
+const authMiddleware = require('./middlewares/authMiddleware');
 
 const router = express.Router();
 
-// Rota para BUSCAR todos agendamentos
-router.get('/agendamentos', agendamentoController.getAllAgendamentos);
 
-// Rota para CRIAR um novo agendamento
+// ======================================================
+// --- ROTAS PÚBLICAS (Acessíveis por qualquer um) ---
+// ======================================================
+
+// Rota para o cliente verificar horários disponíveis
+router.get('/disponibilidade', disponibilidadeController.getDisponibilidade);
+
+// Rota para o cliente criar um novo agendamento
 router.post(
     '/agendamentos',
     agendamentoMiddlewares.validateBody,
@@ -16,17 +27,27 @@ router.post(
     agendamentoController.createAgendamento
 );
 
-// Rota para DELETAR um agendamento
-router.delete('/agendamentos/:id', agendamentoController.deleteAgendamento);
+// Rota para o proprietário fazer login
+router.post('/login', usuarioController.login);
 
-// Rota para ATUALIZAR (UPDATE) um agendamento específico pelo ID
+
+// =================================================================
+// --- ROTAS PROTEGIDAS (Acessíveis apenas com token de login) ---
+// =================================================================
+
+// Rota para o proprietário ver TODOS os agendamentos
+router.get('/agendamentos', authMiddleware, agendamentoController.getAllAgendamentos);
+
+// Rota para o proprietário ATUALIZAR um agendamento (usando PUT)
 router.put(
     '/agendamentos/:id',
-    agendamentoMiddlewares.validateBody, // Reutilizamos o mesmo middleware de validação
+    authMiddleware, // Garante que só o proprietário logado pode atualizar
+    agendamentoMiddlewares.validateBody,
     agendamentoController.updateAgendamento
 );
 
-// Rota para verificar horários disponíveis em uma data
-router.get('/disponibilidade', disponibilidadeController.getDisponibilidade);
+// Rota para o proprietário DELETAR um agendamento
+router.delete('/agendamentos/:id', authMiddleware, agendamentoController.deleteAgendamento);
+
 
 module.exports = router;

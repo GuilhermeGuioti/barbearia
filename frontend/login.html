@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Lobster&family=Montserrat:wght@400;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+
+    <link rel="stylesheet" href="assets/css/style.css">
+
+    <title>Login - Painel Barbearia</title>
+</head>
+<body>
+    <div class="booking_container">
+        <div class="booking_title">
+            <h1>Barbearia</h1>
+            <h2>Painel de Controle</h2>
+        </div>
+
+        <div class="booking_options">
+            <form id="login-form">
+                
+                <label class="form_field" for="email">
+                    <i class="fa-solid fa-envelope"></i>
+                    <input type="email" id="email" placeholder="Digite seu email" required>
+                </label>
+
+                <label class="form_field" for="senha">
+                    <i class="fa-solid fa-lock"></i>
+                    <input type="password" id="senha" placeholder="Digite sua senha" required>
+                </label>
+
+                <button type="submit">Entrar</button>
+
+                <p id="error-message"></p>
+
+            </form>
+        </div>
+    </div>
+
+    <script defer src="assets/js/login.js"></script>
+</body>
+</html>

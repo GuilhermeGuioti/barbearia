@@ -38,3 +38,12 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
 });
+
+// Seleciona o campo de data
+const dataInput = document.getElementById('data');
+
+// Adiciona um evento de clique para abrir o calendário ao clicar no campo de data
+dataInput.addEventListener('click', function() {
+    // Dispara o evento de foco para abrir o calendário
+    this.showPicker();
+});

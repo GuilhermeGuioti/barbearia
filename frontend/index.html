@@ -14,7 +14,10 @@
   <title>BarberAgenda</title>
 </head>
 <body>
-  
+    <a href="login.html" class="admin-login-link" title="Acesso do Proprietário">
+      <i class="fa-solid fa-gear"></i>
+    </a>  
+
   <div class="booking_container">
     <div class="booking_title">
       <h1>Felipe</h1>
@@ -29,18 +32,18 @@
     <div class="booking_options">
       <form>
         <label class="form_name" for="nome">
-          <i class="fa-solid fa-user"></i>
+          <i class="fa-solid fa-user" for="nome"></i>
           <input type="text" placeholder="Digite seu nome:" id="nome" required>
         </label>
 
         <label class="form_phone" for="telefone">
-          <i class="fa-solid fa-phone"></i>
+          <i class="fa-solid fa-phone" for="telefone"></i>
           <input type="tel" placeholder="Digite seu telefone" id="telefone" required>
         </label>
 
         <div class="form_service">
           <div class="custom-select-wrapper">
-              <i class="fa-solid fa-scissors icon-prefix"></i>
+              <i class="fa-solid fa-scissors icon-prefix" for="servico"></i>
               <select id="servico" name="servico" style="display: none;" required>
                   <option value=""></option>
                   <option value="Corte">Corte</option>
@@ -60,8 +63,8 @@
         </div>
 
         <label class="form_data" for="data">
-          <i class="fa-regular fa-calendar-days"></i>
-          <input type="date" id="data" required>
+          <i class="fa-regular fa-calendar-days" for="data"></i>
+          <input type="date" id="data" required placeholder="oi">
         </label>
 
         <div id="horarios-container"></div>
@@ -72,7 +75,7 @@
 
   </div>
 
-  <script src="assets/js/serviceWrapper.js"></script>
+  <script src="assets/js/formIndex.js"></script>
   <script defer src="assets/js/script.js"></script>
 </body>
 </html>

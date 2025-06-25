@@ -76,10 +76,9 @@ body {
 }
 
 /* Estilo base para os contêineres dos campos */
-.form_name, .form_service, .form_data, .form_phone {
+.form_name, .form_service, .form_data, .form_phone, .form_field {
     background-color: #2a2a2a;
     border-radius: 12px;
-    padding: 15px;
     display: flex;
     align-items: center;
     border: 1px solid #3a3a3a;
@@ -89,22 +88,27 @@ body {
 /* --- 4. ESTILOS GERAIS DOS CAMPOS (Ícones e Inputs) --- */
 
 /* Estilo para os ícones */
-.form_name i, .form_service i, .form_data i, .form_phone i {
+.form_name i, .form_service i, .form_data i, .form_phone i, .form_field i {
     color: #b0b0b0;
     margin-right: 15px;
     font-size: 1.1rem;
     width: 20px;
     text-align: center;
+    cursor: pointer;
+    padding-left: 15px;
+    display: flex;
+    align-items: center;
 }
 
 /* Estilo para os inputs (texto, telefone, data) */
-.form_name input, .form_data input, .form_phone input {
+.form_name input, .form_data input, .form_phone input, .form_field input {
     background: none;
     border: none;
     color: #e0e0e0;
     font-size: 1rem;
     width: 100%;
     outline: none;
+    padding: 15px;
 }
 
 .form_name input::placeholder {
@@ -114,6 +118,8 @@ body {
 /* Estilos específicos para o input de data */
 .form_data input {
     cursor: pointer;
+    user-select: none;
+    color: #888;
 }
 
 .form_data input[type="date"]::-webkit-calendar-picker-indicator {
@@ -121,7 +127,7 @@ body {
     opacity: 0.6;
     filter: invert(1);
     font-size: 1.2rem;
-    padding-right: .85rem; 
+    padding-right: .5rem; 
 }
 
 .form_data input[type="date"]::-webkit-calendar-picker-indicator:hover {
@@ -143,6 +149,7 @@ body {
     justify-content: space-between;
     align-items: center;
     width: 100%;
+    padding: 15px;
 }
 
 .custom-select .select-text {
@@ -157,6 +164,7 @@ body {
     font-size: 0.9rem;
     color: #b0b0b0;
     transition: transform 0.3s ease;
+    padding-right: .5rem;
 }
 
 .custom-select-wrapper.open .select-arrow {
@@ -268,4 +276,36 @@ input:-webkit-autofill:active {
     filter: invert(1);
     font-size: 1.2rem;
     padding-right: .85rem;
+}
+
+/* Estilo para a mensagem de erro no formulário de login */
+#error-message {
+    color: #ff6b6b; /* Um tom de vermelho claro */
+    text-align: center;
+    margin-top: 15px;
+    font-weight: bold;
+    height: 20px; /* Garante que não empurre o layout quando vazia */
+}
+
+/* --- LINK DE LOGIN DO ADMIN (FIXO NA TELA) --- */
+.admin-login-link {
+    /* A MUDANÇA PRINCIPAL: fixa o elemento em relação à janela do navegador */
+    position: fixed; 
+    
+    /* Define a posição no canto superior direito */
+    top: 25px;
+    right: 30px;
+    
+    /* Garante que o ícone fique acima de qualquer outro conteúdo */
+    z-index: 1000; 
+
+    color: #a0a0a0; /* Um pouco mais claro para destacar no fundo */
+    font-size: 1.6rem;
+    text-decoration: none;
+    transition: color 0.3s ease, transform 0.3s ease;
+}
+
+.admin-login-link:hover {
+    color: #ffffff;
+    transform: rotate(90deg); /* O efeito de rotação ao passar o mouse */
 }
