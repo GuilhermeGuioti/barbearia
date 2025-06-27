@@ -4,9 +4,9 @@ const connection = require('../src/models/connection'); // Precisamos navegar pa
 
 // --- Defina aqui os dados do proprietário ---
 const adminUser = {
-    nome: 'Felipe (Proprietário)',
-    email: 'felipe@barbearia.com',
-    senhaPura: 'uma_senha_muito_forte_123' // Use uma senha forte aqui!
+    nome: 'admin',
+    email: 'admin@admin.com',
+    senhaPura: 'admin' // Use uma senha forte aqui!
 };
 
 const saltRounds = 10;

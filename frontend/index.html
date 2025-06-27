@@ -1,70 +1,67 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt-br">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
-  <link rel="stylesheet" href="assets/css/style.css">
   <link rel="shortcut icon" href="assets/imgs/favicon.ico" type="image/x-icon">
 
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Lobster&family=Montserrat:wght@400;700;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/css/style.css">
 
   <title>BarberAgenda</title>
 </head>
 <body>
-    <a href="login.html" class="admin-login-link" title="Acesso do Proprietário">
+  <a href="login.html" class="admin-login-link" title="Acesso do Proprietário">
       <i class="fa-solid fa-gear"></i>
-    </a>  
+  </a> 
 
   <div class="booking_container">
     <div class="booking_title">
-      <h1>Felipe</h1>
-      <h2>Barbearia</h2>
+        <h1>Felipe</h1>
+        <h2>Barbearia</h2>
     </div>
 
     <div class="booking_subtitle">
-      <h3>Agende seu horario</h3>
-      <p>Escolha os serviços que deseja e agende-os no horário que preferir</p>
+        <h3>Agende seu horario</h3>
+        <p>Escolha os serviços que deseja e agende-os no horário que preferir</p>
     </div>
 
     <div class="booking_options">
       <form>
         <label class="form_name" for="nome">
-          <i class="fa-solid fa-user" for="nome"></i>
-          <input type="text" placeholder="Digite seu nome:" id="nome" required>
+            <i class="fa-solid fa-user"></i>
+            <input type="text" placeholder="Digite seu nome:" id="nome" required>
         </label>
 
         <label class="form_phone" for="telefone">
-          <i class="fa-solid fa-phone" for="telefone"></i>
-          <input type="tel" placeholder="Digite seu telefone" id="telefone" required>
+            <i class="fa-solid fa-phone"></i>
+            <input type="tel" placeholder="Digite seu telefone" id="telefone" required>
         </label>
 
         <div class="form_service">
           <div class="custom-select-wrapper">
-              <i class="fa-solid fa-scissors icon-prefix" for="servico"></i>
-              <select id="servico" name="servico" style="display: none;" required>
-                  <option value=""></option>
-                  <option value="Corte">Corte</option>
-                  <option value="Barba">Barba</option>
-                  <option value="Corte e Barba">Corte e Barba</option>
-              </select>
-              <div class="custom-select">
-                  <span class="select-text placeholder">Selecione o serviço</span>
-                  <i class="fa-solid fa-chevron-down select-arrow"></i>
-              </div>
-              <div class="custom-options">
-                  <div class="custom-option" data-value="Corte">Corte</div>
-                  <div class="custom-option" data-value="Barba">Barba</div>
-                  <div class="custom-option" data-value="Corte e Barba">Corte e Barba</div>
-              </div>
+            <i class="fa-solid fa-scissors icon-prefix"></i>
+            <select id="servico" name="servico" style="display: none;" required>
+              <option value=""></option>
+              <option value="Corte">Corte</option>
+              <option value="Barba">Barba</option>
+              <option value="Corte e Barba">Corte e Barba</option>
+            </select>
+            <div class="custom-select">
+              <span class="select-text placeholder">Selecione o serviço</span>
+              <i class="fa-solid fa-chevron-down select-arrow"></i>
+            </div>
+            <div class="custom-options">
+              <div class="custom-option" data-value="Corte">Corte</div>
+              <div class="custom-option" data-value="Barba">Barba</div>
+              <div class="custom-option" data-value="Corte e Barba">Corte e Barba</div>
+            </div>
           </div>
         </div>
 
         <label class="form_data" for="data">
-          <i class="fa-regular fa-calendar-days" for="data"></i>
-          <input type="date" id="data" required placeholder="oi">
+          <i class="fa-regular fa-calendar-days"></i>
+          <input type="date" id="data" required>
         </label>
 
         <div id="horarios-container"></div>
@@ -72,10 +69,9 @@
         <button type="submit">Agendar</button>
       </form>
     </div>
-
   </div>
 
-  <script src="assets/js/formIndex.js"></script>
+  <script src="assets/js/selectCustom.js"></script>
   <script defer src="assets/js/script.js"></script>
 </body>
 </html>

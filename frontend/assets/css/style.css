@@ -1,16 +1,14 @@
-/* --- 1. CONFIGURAÇÕES GLOBAIS E BODY --- */
-* {
-    padding: 0;
-    margin: 0;
-    box-sizing: border-box;
-    font-family: 'Montserrat', sans-serif;
-}
+@import url(default.css);
+
+/* ==========================================================================
+   2. BODY
+   ========================================================================== */
 
 body {
     background-image: url(../imgs/folhas-da-planta-monstera-deliciosa-molhada-em-um-jardim.jpg);
     background-size: cover;
     background-position: center;
-    color: #fff;
+    color: var(--text-light);
     display: flex;
     justify-content: center;
     align-items: center;
@@ -18,8 +16,9 @@ body {
     padding: 20px;
 }
 
-
-/* --- 2. LAYOUT PRINCIPAL E TÍTULOS --- */
+/* ==========================================================================
+   3. LAYOUT PRINCIPAL E TÍTULOS
+   ========================================================================== */
 .booking_container {
     width: 100%;
     max-width: 450px;
@@ -31,22 +30,22 @@ body {
 }
 
 .booking_title h1 {
-    font-family: 'Lobster', cursive;
-    font-size: 4.5rem; 
+    font-family: var(--font-logo);
+    font-size: 4.5rem;
     font-weight: 400;
     line-height: 1;
     margin-bottom: 0;
     letter-spacing: 2px;
-    color: #ffffff;
+    color: var(--text-light);
 }
 
 .booking_title h2 {
-    font-size: 1.5rem; 
+    font-size: 1.5rem;
     font-weight: 700;
     letter-spacing: 1px;
     text-transform: uppercase;
     margin-top: 5px;
-    color: #ddd;
+    color: var(--text-primary);
 }
 
 .booking_subtitle {
@@ -61,14 +60,15 @@ body {
 }
 
 .booking_subtitle p {
-    font-size: 0.9rem;
-    color: #b0b0b0;
+    font-size: 1rem;
+    color: var(--text-secondary);
     line-height: 1.4;
     margin-bottom: 0;
 }
 
-
-/* --- 3. ESTRUTURA DO FORMULÁRIO --- */
+/* ==========================================================================
+   4. ESTRUTURA E ESTILOS GERAIS DO FORMULÁRIO
+   ========================================================================== */
 .booking_options form {
     display: flex;
     flex-direction: column;
@@ -77,19 +77,16 @@ body {
 
 /* Estilo base para os contêineres dos campos */
 .form_name, .form_service, .form_data, .form_phone, .form_field {
-    background-color: #2a2a2a;
+    background-color: var(--bg-element);
     border-radius: 12px;
     display: flex;
     align-items: center;
-    border: 1px solid #3a3a3a;
+    border: 1px solid var(--border-primary);
 }
-
-
-/* --- 4. ESTILOS GERAIS DOS CAMPOS (Ícones e Inputs) --- */
 
 /* Estilo para os ícones */
 .form_name i, .form_service i, .form_data i, .form_phone i, .form_field i {
-    color: #b0b0b0;
+    color: var(--text-secondary);
     margin-right: 15px;
     font-size: 1.1rem;
     width: 20px;
@@ -104,7 +101,7 @@ body {
 .form_name input, .form_data input, .form_phone input, .form_field input {
     background: none;
     border: none;
-    color: #e0e0e0;
+    color: var(--text-primary);
     font-size: 1rem;
     width: 100%;
     outline: none;
@@ -112,14 +109,13 @@ body {
 }
 
 .form_name input::placeholder {
-    color: #888;
+    color: var(--text-placeholder);
 }
 
-/* Estilos específicos para o input de data */
 .form_data input {
     cursor: pointer;
     user-select: none;
-    color: #888;
+    color: var(--text-placeholder);
 }
 
 .form_data input[type="date"]::-webkit-calendar-picker-indicator {
@@ -134,8 +130,9 @@ body {
     opacity: 0.8;
 }
 
-
-/* --- 5. COMPONENTE: SELECT DE SERVIÇO CUSTOMIZADO --- */
+/* ==========================================================================
+   5. COMPONENTE: SELECT DE SERVIÇO CUSTOMIZADO
+   ========================================================================== */
 .custom-select-wrapper {
     position: relative;
     cursor: pointer;
@@ -153,18 +150,18 @@ body {
 }
 
 .custom-select .select-text {
-    color: #e0e0e0;
+    color: var(--text-primary);
 }
 
 .custom-select .select-text.placeholder {
-    color: #888;
+    color: var(--text-placeholder);
 }
 
 .custom-select .select-arrow {
     font-size: 0.9rem;
-    color: #b0b0b0;
+    color: var(--text-secondary);
     transition: transform 0.3s ease;
-    padding-right: .5rem;
+    padding-right: .6rem;
 }
 
 .custom-select-wrapper.open .select-arrow {
@@ -177,8 +174,8 @@ body {
     top: calc(100% + 10px);
     left: 0;
     right: 0;
-    background-color: #2a2a2a;
-    border: 1px solid #3a3a3a;
+    background-color: var(--bg-element);
+    border: 1px solid var(--border-primary);
     border-radius: 12px;
     overflow: hidden;
     z-index: 10;
@@ -190,16 +187,17 @@ body {
 
 .custom-option {
     padding: 15px 20px;
-    color: #e0e0e0;
+    color: var(--text-primary);
     transition: background-color 0.2s ease;
 }
 
 .custom-option:hover {
-    background-color: #3f3f3f;
+    background-color: var(--bg-hover);
 }
 
-
-/* --- 6. COMPONENTE: HORÁRIOS DISPONÍVEIS --- */
+/* ==========================================================================
+   6. COMPONENTE: BOTÕES DE HORÁRIOS DISPONÍVEIS
+   ========================================================================== */
 #horarios-container {
     display: flex;
     flex-wrap: wrap;
@@ -207,23 +205,24 @@ body {
     margin-top: 5px;
     padding: 15px 0;
     justify-content: center;
-    border-top: 1px solid #3a3a3a;
+    border-top: 1px solid var(--border-primary);
 }
 
 .horario-btn.selecionado {
-    background-color: #5e5e5e;
-    color: #ffffff;
-    border: 1px solid #777777;
+    background-color: var(--bg-button-hover);
+    color: var(--text-light);
+    border: 1px solid var(--border-focus);
     font-weight: bold;
     transform: scale(1.05);
-    box-shadow: 0 0 15px rgba(255, 255, 255, 0.3);
+    box-shadow: 0 0 15px var(--shadow-light);
 }
 
-
-/* --- 7. BOTÃO DE AGENDAMENTO PRINCIPAL --- */
+/* ==========================================================================
+   7. BOTÃO DE AGENDAMENTO PRINCIPAL
+   ========================================================================== */
 .booking_options button {
-    background-color: #4a4a4a;
-    color: #e0e0e0;
+    background-color: var(--bg-button);
+    color: var(--text-primary);
     font-size: 1.1rem;
     font-weight: 700;
     padding: 18px;
@@ -235,77 +234,47 @@ body {
 }
 
 .booking_options button:hover {
-    background-color: #5e5e5e;
+    background-color: var(--bg-button-hover);
     transform: scale(1.02);
 }
 
-
-/* --- 8. ESTILOS ESPECIAIS DO NAVEGADOR E LEGADO --- */
+/* ==========================================================================
+   8. ESTILOS GERAIS E DE NAVEGADOR
+   ========================================================================== */
 
 /* Comportamento de Autopreenchimento (Autofill) */
 input:-webkit-autofill,
 input:-webkit-autofill:hover, 
 input:-webkit-autofill:focus, 
 input:-webkit-autofill:active {
-    -webkit-text-fill-color: #e0e0e0;
-    -webkit-box-shadow: 0 0 0 30px #2a2a2a inset !important;
-    transition: background-color 5000s ease-in-out 0s;
-    font-family: 'Montserrat', sans-serif;
-    font-size: 1rem;
+    -webkit-text-fill-color: var(--text-primary) !important;
+    -webkit-box-shadow: 0 0 0 30px var(--bg-element) inset !important;
+    font-family: var(--font-primary) !important;
+    font-size: 1rem !important;
 }
 
-/* Estilo legado para o select nativo (não usado na versão com JS) */
-.form_service select {
-    background: none;
-    border: none;
-    color: #e0e0e0;
-    font-size: 1rem;
-    width: 100%;
-    outline: none;
-    appearance: none;
-    background-image: url('data:image/svg+xml;utf8,<svg fill="%23b0b0b0" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><path d="M7 10l5 5 5-5z"/></svg>');
-    background-repeat: no-repeat;
-    background-position: right 10px center;
-    cursor: pointer;
-}
-
-/* Estilo legado para o input datetime-local (não usado na versão com date + horários) */
-.form_data input[type="datetime-local"]::-webkit-calendar-picker-indicator {
-    cursor: pointer;
-    opacity: 0.6;
-    filter: invert(1);
-    font-size: 1.2rem;
-    padding-right: .85rem;
-}
-
-/* Estilo para a mensagem de erro no formulário de login */
-#error-message {
-    color: #ff6b6b; /* Um tom de vermelho claro */
-    text-align: center;
-    margin-top: 15px;
-    font-weight: bold;
-    height: 20px; /* Garante que não empurre o layout quando vazia */
-}
-
-/* --- LINK DE LOGIN DO ADMIN (FIXO NA TELA) --- */
+/* LINK DE LOGIN DO ADMIN (FIXO NA TELA) */
 .admin-login-link {
-    /* A MUDANÇA PRINCIPAL: fixa o elemento em relação à janela do navegador */
     position: fixed; 
-    
-    /* Define a posição no canto superior direito */
     top: 25px;
     right: 30px;
-    
-    /* Garante que o ícone fique acima de qualquer outro conteúdo */
     z-index: 1000; 
-
-    color: #a0a0a0; /* Um pouco mais claro para destacar no fundo */
+    color: var(--text-secondary);
     font-size: 1.6rem;
     text-decoration: none;
     transition: color 0.3s ease, transform 0.3s ease;
 }
 
 .admin-login-link:hover {
-    color: #ffffff;
-    transform: rotate(90deg); /* O efeito de rotação ao passar o mouse */
+    color: var(--text-light);
+    transform: rotate(90deg);
+}
+
+/* Mensagem de erro no formulário de login */
+#error-message {
+    color: var(--text-error);
+    text-align: center;
+    margin-top: 15px;
+    font-weight: bold;
+    height: 20px;
 }

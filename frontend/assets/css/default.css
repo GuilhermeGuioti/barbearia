@@ -1,0 +1,42 @@
+/* ==========================================================================
+   1. VARIÁVEIS GLOBAIS (PALETA DE CORES E FONTES)
+   ========================================================================== */
+
+@import url('https://fonts.googleapis.com/css2?family=Lobster&family=Poppins:wght@400;500;700&display=swap');   
+:root {
+    /* -- Textos -- */
+    --text-light:       #ffffff;
+    --text-primary:     #e0e0e0;
+    --text-secondary:   #b0b0b0;
+    --text-placeholder: #888888;
+    --text-error:       #ff6b6b;
+
+    /* -- Fundos (Tema Escuro) -- */
+    --bg-element:       #2a2a2a;
+    --bg-painel:        #1c1c1c;
+    --bg-hover:         #3f3f3f;
+    --bg-button:        #4a4a4a;
+    --bg-button-hover:  #5e5e5e;
+    --bg-confirms:      #2c5a4d;
+    --bg-negative:      #a83232;
+    
+    /* -- Bordas e Sombras -- */
+    --border-primary:   #3a3a3a;
+    --border-segundary: #555;
+    --border-focus:     #777777;
+    --shadow-light:     rgba(255, 255, 255, 0.3);
+
+    /* -- Fontes -- */
+    --font-primary: 'Poppins', sans-serif;
+    --font-logo: 'Lobster', cursive;
+}
+
+/* ==========================================================================
+   2. CONFIGURAÇÕES GLOBAIS
+   ========================================================================== */
+* {
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+    font-family: var(--font-primary);
+}

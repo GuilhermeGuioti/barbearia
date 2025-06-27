@@ -107,6 +107,15 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     }
 
+    function showAllAgendamentos() {
+        // Limpa o campo de data para o usuário saber que está vendo todos os dias
+        dataFiltroInput.value = '';
+
+        // Usa os dados que já temos em cache para não fazer uma nova chamada desnecessária à API
+        renderizarAgendamentos(agendamentosCache);
+        updateSummaryCards(agendamentosCache);
+    }   
+
 
     // --- 3. FUNÇÕES DE AÇÃO (MODAL E DELETE) ---
     function showConfirmationModal(message) {
@@ -260,6 +269,12 @@ async function handleUpdate(event) {
     // Ouve o clique no botão de cancelar do modal de edição
     editCancelBtn.addEventListener('click', () => {
         editModal.style.display = 'none';
+    });
+
+    const showAllBtn = document.getElementById('show-all-btn');
+    // O evento de clique agora simplesmente chama a nossa nova função
+    showAllBtn.addEventListener('click', () => {
+        showAllAgendamentos();
     });
 
 

@@ -1,4 +1,8 @@
-/* --- 1. LAYOUT PRINCIPAL (GRID) --- */
+@import url(default.css);
+
+/* ==========================================================================
+   1. LAYOUT PRINCIPAL DO PAINEL
+   ========================================================================== */
 body {
     display: grid;
     /* Define duas colunas: uma fixa de 260px para a sidebar e o resto para o conteúdo */
@@ -9,8 +13,14 @@ body {
     background-color: #1c1c1c; /* Cor de fundo para a área de conteúdo */
 }
 
+.main-content {
+    padding: 40px;
+    overflow-y: auto; /* Adiciona scroll SÓ na área de conteúdo se ela for muito grande */
+}
 
-/* --- 2. SIDEBAR (MENU LATERAL) --- */
+/* ==========================================================================
+   2. COMPONENTE: SIDEBAR (MENU LATERAL)
+   ========================================================================== */
 .sidebar {
     background-color: #121212; /* Um preto um pouco mais escuro */
     color: #e0e0e0;
@@ -22,6 +32,7 @@ body {
 .sidebar-header {
     text-align: center;
     margin-bottom: 40px;
+    margin-top: 20px;
 }
 .sidebar-header h1 {
     font-family: 'Lobster', cursive; /* Reutilizando a fonte do logo */
@@ -36,7 +47,6 @@ body {
     color: #888;
 }
 
-/* Navegação */
 .sidebar-nav {
     flex-grow: 1; /* Faz a navegação ocupar o espaço do meio */
 }
@@ -72,7 +82,6 @@ body {
     font-size: 1.1rem;
 }
 
-/* Rodapé da Sidebar (Botão Sair) */
 .sidebar-footer a {
     display: flex;
     align-items: center;
@@ -94,13 +103,9 @@ body {
     font-size: 1.1rem;
 }
 
-
-/* --- 3. CONTEÚDO PRINCIPAL --- */
-.main-content {
-    padding: 40px;
-    overflow-y: auto; /* Adiciona scroll SÓ na área de conteúdo se ela for muito grande */
-}
-
+/* ==========================================================================
+   3. CONTEÚDO PRINCIPAL DO PAINEL
+   ========================================================================== */
 .page-header {
     display: flex;
     justify-content: space-between;
@@ -112,16 +117,31 @@ body {
     font-size: 2rem;
     font-weight: 700;
 }
+
+/* --- Seletor de Data --- */
+.date-selector {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
 .date-selector input[type="date"] {
     background-color: #2a2a2a;
     border: 1px solid #3a3a3a;
     color: #e0e0e0;
-    padding: 15px;
+    padding: 16px;
     border-radius: 8px;
-    font-size: 1.2rem;
+    font-size: 1rem;
+}
+.date-selector input[type="date"]::-webkit-calendar-picker-indicator {
+    cursor: pointer;
+    opacity: 0.6; 
+    filter: invert(1); 
+}
+.date-selector input[type="date"]::-webkit-calendar-picker-indicator:hover {
+    opacity: 0.8;
 }
 
-/* Cards de Resumo */
+/* --- Cards de Resumo --- */
 .summary-cards {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
@@ -144,7 +164,7 @@ body {
     color: #fff;
 }
 
-/* Lista de Agendamentos */
+/* --- Lista de Agendamentos --- */
 .appointments-list {
     color: #fff;
 }
@@ -152,8 +172,6 @@ body {
     margin-bottom: 20px;
     font-size: 1.5rem;
 }
-
-/* Estilos para os cards de agendamento que virão do JS (já tínhamos feito) */
 #lista-agendamentos {
     display: flex;
     flex-direction: column;
@@ -201,9 +219,9 @@ body {
     transform: scale(1.1);
 }
 
-/* --- ESTILOS DO MODAL DE CONFIRMAÇÃO --- */
-
-/* O fundo escuro que cobre a tela inteira */
+/* ==========================================================================
+   4. COMPONENTE: MODAL
+   ========================================================================== */
 .modal-overlay {
     position: fixed;
     top: 0;
@@ -211,13 +229,12 @@ body {
     width: 100%;
     height: 100%;
     background-color: rgba(0, 0, 0, 0.7);
-    display: none; /* Começa escondido */
+    display: none;
     justify-content: center;
     align-items: center;
-    z-index: 2000; /* Garante que fique acima de tudo */
+    z-index: 2000;
 }
 
-/* A caixa de diálogo do modal */
 .modal-content {
     background-color: #2a2a2a;
     padding: 30px;
@@ -227,28 +244,23 @@ body {
     width: 90%;
     max-width: 400px;
 }
-
 .modal-content h3 {
     margin-top: 0;
     margin-bottom: 15px;
     font-size: 1.5rem;
     color: #fff;
 }
-
 .modal-content p {
     margin-bottom: 30px;
     color: #b0b0b0;
     line-height: 1.5;
 }
 
-/* Contêiner para os botões de ação */
 .modal-actions {
     display: flex;
     justify-content: center;
     gap: 15px;
 }
-
-/* Estilo genérico para os botões do modal */
 .modal-actions button {
     padding: 12px 25px;
     border: none;
@@ -258,92 +270,90 @@ body {
     cursor: pointer;
     transition: transform 0.2s ease;
 }
-
 .modal-actions button:hover {
     transform: scale(1.05);
 }
-
-/* Botão secundário (Cancelar) */
 .modal-actions .btn-secondary {
-    background-color: #555;
+    background-color: var(--border-segundary);
     color: #fff;
 }
-
-/* Botão de perigo (Confirmar Exclusão) */
 .modal-actions .btn-danger {
     background-color: #a83232;
     color: #fff;
 }
 
-/* --- ESTILOS PARA O FORMULÁRIO DENTRO DO MODAL (VERSÃO PADRONIZADA) --- */
-
+/* --- Formulário Dentro do Modal --- */
 .modal-content .form-group {
     display: flex;
     flex-direction: column;
     text-align: left;
     margin-bottom: 15px;
 }
-
 .modal-content .form-group label {
     margin-bottom: 5px;
     font-size: 0.9rem;
     color: #b0b0b0;
     font-weight: 500;
 }
-
-/* Regra FORTE para padronizar TODOS os campos (input e select) */
 .modal-content .form-group input,
 .modal-content .form-group select {
-    /* --- A chave para o alinhamento e tamanho --- */
-    box-sizing: border-box; /* Garante que padding e borda fiquem DENTRO da largura/altura total */
-    -webkit-appearance: none; /* Remove estilos nativos do navegador (essencial para o select) */
+    box-sizing: border-box;
+    -webkit-appearance: none;
     -moz-appearance: none;
     appearance: none;
-    width: 100%; /* Ocupa toda a largura do container */
-    height: 48px; /* Altura fixa para todos os campos */
+    width: 100%;
+    height: 48px;
     background-color: #1c1c1c;
     border: 1px solid #555;
     border-radius: 8px;
-    padding: 0 15px; /* Apenas padding horizontal */
+    padding: 0 15px;
     color: #e0e0e0;
     font-size: 1rem;
     font-family: 'Montserrat', sans-serif;
     outline: none;
     transition: border-color 0.2s ease, box-shadow 0.2s ease;
 }
-
-/* Adiciona um efeito de foco consistente */
 .modal-content .form-group input:focus,
 .modal-content .form-group select:focus {
     border-color: #888;
     box-shadow: 0 0 5px rgba(150, 150, 150, 0.1);
 }
-
-/* Adiciona a nossa seta personalizada de volta ao SELECT, já que o 'appearance: none' a removeu */
 .modal-content .form-group select {
     background-image: url('data:image/svg+xml;utf8,<svg fill="%23b0b0b0" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><path d="M7 10l5 5 5-5z"/></svg>');
     background-repeat: no-repeat;
     background-position: right 15px center;
     cursor: pointer;
 }
-
-/* Estiliza o ícone nativo do calendário dentro do modal de edição */
-.modal-content .form-group input[type="datetime-local"]::-webkit-calendar-picker-indicator,
-.date-selector input[type="date"]::-webkit-calendar-picker-indicator {
+.modal-content .form-group input[type="datetime-local"]::-webkit-calendar-picker-indicator {
     cursor: pointer;
-    opacity: 0.6; /* Deixa o ícone um pouco transparente (dando um efeito acinzentado) */
-    
-    /* A MÁGICA: Inverte a cor do ícone de preto para branco */
+    opacity: 0.6;
     filter: invert(1); 
 }
-
-/* Adiciona um efeito hover para melhorar a interatividade */
-.modal-content .form-group input[type="datetime-local"]::-webkit-calendar-picker-indicator:hover,
-.date-selector input[type="date"]::-webkit-calendar-picker-indicator::hover {
+.modal-content .form-group input[type="datetime-local"]::-webkit-calendar-picker-indicator:hover {
     opacity: 0.8;
 }
 
-.btn-primary{
-  background-color: #2c5a4d;
-  color: #fff;
+/* ==========================================================================
+   5. BOTÕES ESPECÍFICOS
+   ========================================================================== */
+.btn-primary {
+    background-color: #2c5a4d;
+    color: #fff;
+}
+
+.btn-secondary {
+    padding: 20px;
+    background-color: #2a2a2a;
+    color: #e0e0e0;
+    border: 1px solid #3a3a3a;
+    border-radius: 8px;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 1rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+.btn-secondary:hover {
+    background-color: #5e5e5e;
 }
