@@ -74,6 +74,49 @@ const getAgendamentosPorData = async (data) => {
     return agendamentos;
 };
 
+const getCountLast7Days = async () => {
+    // Esta query SQL agrupa os agendamentos por dia e conta quantos existem em cada dia.
+    // Ela pega os dados de 6 dias atrás até hoje.
+    const query = `
+        SELECT 
+            DATE(data_hora) as dia, 
+            COUNT(id) as total
+        FROM agendamentos
+        WHERE data_hora >= CURDATE() - INTERVAL 6 DAY AND data_hora < CURDATE() + INTERVAL 1 DAY
+        GROUP BY DATE(data_hora)
+        ORDER BY dia ASC;
+    `;
+    const [stats] = await connection.execute(query);
+    return stats;
+};
+
+const getServiceStats = async () => {
+    // A única mudança é a adição da cláusula WHERE para filtrar pela semana atual.
+    const query = `
+        SELECT servico, COUNT(id) as total
+        FROM agendamentos
+        WHERE YEARWEEK(data_hora, 1) = YEARWEEK(CURDATE(), 1) -- << FILTRO ADICIONADO AQUI
+        GROUP BY servico
+        ORDER BY total DESC;
+    `;
+    const [stats] = await connection.execute(query);
+    return stats;
+};
+
+const getStatusStatsThisWeek = async () => {
+    // YEARWEEK(data_hora) retorna o ano e a semana de uma data.
+    // YEARWEEK(CURDATE()) retorna o ano e a semana de hoje.
+    // Comparamos os dois para pegar apenas os registros da semana corrente.
+    const query = `
+        SELECT status, COUNT(id) as total
+        FROM agendamentos
+        WHERE YEARWEEK(data_hora, 1) = YEARWEEK(CURDATE(), 1)
+        GROUP BY status;
+    `;
+    const [stats] = await connection.execute(query);
+    return stats;
+};
+
 module.exports = {
     getAll,
     createAgendamento,
@@ -81,4 +124,7 @@ module.exports = {
     updateAgendamento,
     findConflictingAgendamentos,
     getAgendamentosPorData,
+    getCountLast7Days,
+    getServiceStats,
+    getStatusStatsThisWeek,
 };

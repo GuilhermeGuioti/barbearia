@@ -4,6 +4,7 @@ const express = require('express');
 const agendamentoController = require('./controllers/agendamentoController');
 const disponibilidadeController = require('./controllers/disponibilidadeController');
 const usuarioController = require('./controllers/usuarioController');
+const dashboardController = require('./controllers/dashboardController');
 
 // Middlewares
 const agendamentoMiddlewares = require('./middlewares/agendamentoMiddlewares');
@@ -48,6 +49,12 @@ router.put(
 
 // Rota para o proprietário DELETAR um agendamento
 router.delete('/agendamentos/:id', authMiddleware, agendamentoController.deleteAgendamento);
+
+router.get('/dashboard/stats', authMiddleware, dashboardController.getStats);
+
+router.get('/dashboard/services', authMiddleware, dashboardController.getServiceStats);
+
+router.get('/dashboard/status-stats', authMiddleware, dashboardController.getStatusStats);
 
 
 module.exports = router;

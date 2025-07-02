@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - Barbearia</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;700&family=Lobster&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+    <link rel="stylesheet" href="assets/css/painel.css"> 
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+  <aside class="sidebar">
+    <div class="sidebar-header">
+      <h1>Felipe</h1>
+      <h2>Barbearia</h2>
+    </div>
+
+    <nav class="sidebar-nav">
+      <ul>
+        <li>
+          <a href="painel.html">
+            <i class="fa-solid fa-calendar-days"></i>
+            <span>Agenda</span>
+          </a>
+        </li>
+        <li>
+          <a href="dashboard.html" class="active">
+            <i class="fa-solid fa-chart-simple"></i>
+            <span>Dashboard</span>
+          </a>
+        </li>
+        <li>
+          <a href="#">
+            <i class="fa-solid fa-users"></i>
+            <span>Clientes</span>
+          </a>
+        </li>
+        <li>
+          <a href="#">
+            <i class="fa-solid fa-cogs"></i>
+            <span>Configurações</span>
+          </a>
+        </li>
+      </ul>
+    </nav>
+
+    <div class="sidebar-footer">
+      <a href="#" id="logout-button">
+        <i class="fa-solid fa-right-from-bracket"></i>
+        <span>Sair</span>
+      </a>
+    </div>
+  </aside>
+
+  <main class="main-content">
+        <header class="page-header">
+            <h2>Dashboard</h2>
+            </header>
+
+        <section class="summary-cards">
+            <div class="card">
+                <h4>Total na Semana</h4>
+                <p id="total-semana">--</p>
+            </div>
+            <div class="card">
+                <h4>Média Diária</h4>
+                <p id="media-diaria">--</p>
+            </div>
+            <div class="card">
+                <h4>Dia Mais Movimentado</h4>
+                <p id="dia-pico">--</p>
+            </div>
+        </section>
+
+      <section class="chart-container">
+          <h3>Agendamentos na Última Semana</h3>
+          <div class="chart-wrapper"> <canvas id="dailyAppointmentsChart"></canvas>
+          </div>
+      </section>
+
+      <div class="dashboard-charts">
+          <section class="chart-container">
+              <h3>Tipos de serviços</h3>
+              <div class="chart-wrapper">
+                  <canvas id="servicesPieChart"></canvas>
+              </div>
+          </section>
+
+          <section class="chart-container">
+              <h3>Status na Semana</h3>
+              <div class="chart-wrapper">
+                  <canvas id="statusPieChart"></canvas>
+              </div>
+          </section>
+      </div>
+    </main>
+
+<script defer src="assets/js/dashboard.js"></script>
+</body>
+</html>
