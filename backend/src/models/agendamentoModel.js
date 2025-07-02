@@ -2,22 +2,34 @@ const connection = require('./connection');
 const { getServiceDuration } = require('../utils/services'); // Importe nosso novo utilitário
 
 const getAll = async () => {
-    const query = 'SELECT * FROM agendamentos';
+    // Esta query agora "junta" as tabelas agendamentos e servicos
+    const query = `
+        SELECT 
+            ag.id,
+            ag.nome_cliente,
+            ag.telefone_cliente,
+            ag.data_hora,
+            ag.status,
+            s.nome AS servico_nome,  -- Pega o nome da tabela de serviços
+            s.preco AS servico_preco -- Pega o preço da tabela de serviços
+        FROM 
+            agendamentos ag
+        JOIN 
+            servicos s ON ag.servico_id = s.id
+        ORDER BY 
+            ag.data_hora ASC;
+    `;
     const [agendamentos] = await connection.execute(query);
     return agendamentos;
 };
 
 const createAgendamento = async (agendamento) => {
-    // Desestrutura o objeto para pegar cada campo individualmente.
-    const { nome_cliente, servico, data_hora, telefone_cliente } = agendamento;
-
-    const query = 'INSERT INTO agendamentos(nome_cliente, servico, data_hora, telefone_cliente) VALUES (?, ?, ?, ?)';
-
-    // Executa a query, passando os valores em um array para evitar SQL Injection.
-    const [result] = await connection.execute(query, [nome_cliente, servico, data_hora, telefone_cliente]);
+    // A propriedade 'servico' foi trocada por 'servico_id'
+    const { nome_cliente, telefone_cliente, data_hora, servico_id, status } = agendamento;
+    const query = 'INSERT INTO agendamentos(nome_cliente, telefone_cliente, data_hora, servico_id, status) VALUES (?, ?, ?, ?, ?)';
     
-    // Retorna o ID do agendamento que acabamos de criar.
-    return { insertId: result.insertId };
+    const [createdAgendamento] = await connection.execute(query, [nome_cliente, telefone_cliente, data_hora, servico_id, status]);
+    return { insertId: createdAgendamento.insertId };
 };
 
 const deleteAgendamento = async (id) => {
@@ -31,21 +43,12 @@ const deleteAgendamento = async (id) => {
 };
 
 const updateAgendamento = async (id, agendamento) => {
-    // Desestrutura o objeto para pegar os novos dados
-    const { nome_cliente, servico, telefone_cliente, data_hora, status } = agendamento;
+    // A propriedade 'servico' foi trocada por 'servico_id'
+    const { nome_cliente, telefone_cliente, data_hora, servico_id, status } = agendamento;
+    const query = 'UPDATE agendamentos SET nome_cliente = ?, telefone_cliente = ?, data_hora = ?, servico_id = ?, status = ? WHERE id = ?';
 
-    // Monta a query de UPDATE
-    const query = `
-        UPDATE agendamentos
-        SET nome_cliente = ?, servico = ?, telefone_cliente = ?, data_hora = ?, status = ?
-        WHERE id = ?
-    `;
-
-    // Executa a query, passando os novos dados e o ID como parâmetros
-    const [updated] = await connection.execute(query, [nome_cliente, servico, telefone_cliente, data_hora, status, id]);
-    
-    // Retorna o resultado da operação de update
-    return updated;
+    const [updatedAgendamento] = await connection.execute(query, [nome_cliente, telefone_cliente, data_hora, servico_id, status, id]);
+    return updatedAgendamento;
 };
 
 const findConflictingAgendamentos = async (startTime, durationInMinutes) => {
@@ -91,13 +94,21 @@ const getCountLast7Days = async () => {
 };
 
 const getServiceStats = async () => {
-    // A única mudança é a adição da cláusula WHERE para filtrar pela semana atual.
+    // A query agora une as tabelas 'agendamentos' e 'servicos'
     const query = `
-        SELECT servico, COUNT(id) as total
-        FROM agendamentos
-        WHERE YEARWEEK(data_hora, 1) = YEARWEEK(CURDATE(), 1) -- << FILTRO ADICIONADO AQUI
-        GROUP BY servico
-        ORDER BY total DESC;
+        SELECT 
+            s.nome AS servico,  -- Pega o NOME do serviço da tabela 'servicos'
+            COUNT(ag.id) as total
+        FROM 
+            agendamentos ag
+        JOIN 
+            servicos s ON ag.servico_id = s.id
+        WHERE 
+            YEARWEEK(ag.data_hora, 1) = YEARWEEK(CURDATE(), 1)
+        GROUP BY 
+            s.nome -- Agrupa pelo nome do serviço
+        ORDER BY 
+            total DESC;
     `;
     const [stats] = await connection.execute(query);
     return stats;

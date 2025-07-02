@@ -219,6 +219,65 @@ body {
     transform: scale(1.1);
 }
 
+/* --- ESTILOS MELHORADOS PARA O CARD DE AGENDAMENTO --- */
+
+.agendamento-card {
+    /* ... seus estilos existentes para o card ... */
+    padding: 20px; /* Um pouco mais de padding */
+}
+
+/* Alinha a informação de tempo e a do cliente */
+.agendamento-card .card-info,
+.agendamento-card .card-client-info {
+    display: flex;
+    flex-direction: column;
+    gap: 8px; /* Espaçamento entre os itens */
+}
+
+/* Novo container para tempo e data */
+.card-time-info {
+    text-align: center;
+    min-width: 100px; /* Garante um espaço mínimo */
+    border-right: 1px solid var(--border-primary);
+    padding-right: 20px;
+    margin-right: 20px;
+}
+
+.card-time-info .card-time {
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: var(--text-light);
+}
+
+.card-time-info .card-date {
+    font-size: 0.9rem;
+    color: var(--text-secondary);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+}
+
+/* Informações do Cliente */
+.card-client-info {
+    flex-grow: 1; /* Faz esta seção ocupar o espaço restante */
+}
+
+.card-client-info .card-name {
+    font-size: 1.2rem;
+    font-weight: bold;
+    color: var(--text-primary);
+}
+
+.card-client-info .card-service,
+.card-client-info .card-phone {
+    font-size: 0.9rem;
+    color: var(--text-secondary);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
 /* ==========================================================================
    4. COMPONENTE: MODAL
    ========================================================================== */

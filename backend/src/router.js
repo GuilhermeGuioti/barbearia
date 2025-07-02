@@ -5,6 +5,7 @@ const agendamentoController = require('./controllers/agendamentoController');
 const disponibilidadeController = require('./controllers/disponibilidadeController');
 const usuarioController = require('./controllers/usuarioController');
 const dashboardController = require('./controllers/dashboardController');
+const servicoController = require('./controllers/servicoController');
 
 // Middlewares
 const agendamentoMiddlewares = require('./middlewares/agendamentoMiddlewares');
@@ -31,6 +32,7 @@ router.post(
 // Rota para o proprietário fazer login
 router.post('/login', usuarioController.login);
 
+router.get('/servicos', servicoController.getAll);
 
 // =================================================================
 // --- ROTAS PROTEGIDAS (Acessíveis apenas com token de login) ---
@@ -55,6 +57,7 @@ router.get('/dashboard/stats', authMiddleware, dashboardController.getStats);
 router.get('/dashboard/services', authMiddleware, dashboardController.getServiceStats);
 
 router.get('/dashboard/status-stats', authMiddleware, dashboardController.getStatusStats);
+
 
 
 module.exports = router;

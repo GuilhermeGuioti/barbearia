@@ -48,35 +48,46 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     };
 
-    function renderizarAgendamentos(agendamentos) {
-        listaAgendamentosContainer.innerHTML = '';
-        if (agendamentos.length === 0) {
-            listaAgendamentosContainer.innerHTML = '<p style="color: #888; text-align: center;">Nenhum agendamento para esta data.</p>';
-            return;
-        }
+function renderizarAgendamentos(agendamentos) {
+    const listaAgendamentosContainer = document.getElementById('lista-agendamentos');
+    listaAgendamentosContainer.innerHTML = ''; // Limpa a lista antes de adicionar os novos cards
 
-        agendamentos.forEach(agendamento => {
-            const dataHora = new Date(agendamento.data_hora);
-            const horaFormatada = dataHora.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
-            
-            const card = document.createElement('div');
-            card.className = 'agendamento-card';
-            card.dataset.id = agendamento.id;
-            
-            card.innerHTML = `
-                <div class="card-info">
-                    <strong>${horaFormatada}</strong> - ${agendamento.nome_cliente}
-                    <span><i class="fa-solid fa-scissors"></i> ${agendamento.servico}</span>
-                    <span><i class="fa-solid fa-phone"></i> ${agendamento.telefone_cliente}</span>
-                </div>
-                <div class="card-actions">
-                    <button class="btn-edit" title="Editar Agendamento" data-id="${agendamento.id}">✏️</button>
-                    <button class="btn-delete" title="Excluir Agendamento" data-id="${agendamento.id}">🗑️</button>
-                </div>
-            `;
-            listaAgendamentosContainer.appendChild(card);
-        });
+    if (agendamentos.length === 0) {
+        listaAgendamentosContainer.innerHTML = '<p style="color: #888; text-align: center;">Nenhum agendamento para esta data.</p>';
+        return;
     }
+
+    agendamentos.forEach(agendamento => {
+        // Formata a data e a hora para o padrão brasileiro
+        const dataObj = new Date(agendamento.data_hora);
+        const diaFormatado = dataObj.toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit' });
+        const horaFormatada = dataObj.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
+
+        const card = document.createElement('div');
+        card.className = 'agendamento-card';
+        card.dataset.id = agendamento.id;
+
+        // --- AQUI ESTÁ A MUDANÇA PRINCIPAL: O HTML do Card ---
+        // Ajustado para ter cada informação em uma linha, como no seu layout.
+        card.innerHTML = `
+        <div class="card-time-info">
+            <strong class="card-time">${horaFormatada}</strong>
+            <span class="card-date"><i class="fa-regular fa-calendar-alt"></i> ${diaFormatado}</span>
+        </div>
+        <div class="card-client-info">
+            <p class="card-name">${agendamento.nome_cliente}</p>
+            <span class="card-service"><i class="fa-solid fa-scissors"></i> ${agendamento.servico_nome}</span>
+            <span class="card-phone"><i class="fa-solid fa-phone"></i> ${agendamento.telefone_cliente}</span>
+        </div>
+        <div class="card-actions">
+            <button class="btn-edit" title="Editar Agendamento" data-id="${agendamento.id}"><i class="fa-solid fa-pencil"></i></button>
+            <button class="btn-delete" title="Excluir Agendamento" data-id="${agendamento.id}"><i class="fa-solid fa-trash"></i></button>
+        </div>
+        `;
+        
+        listaAgendamentosContainer.appendChild(card);
+    });
+}
 
     function updateSummaryCards(agendamentosDoDia) {
       const totalAgendamentosEl = document.getElementById('total-agendamentos');

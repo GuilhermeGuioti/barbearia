@@ -1,124 +1,149 @@
-// Espera o documento HTML ser totalmente carregado para executar o script
 document.addEventListener('DOMContentLoaded', () => {
 
-    // --- 1. SELEÇÃO DOS ELEMENTOS DO HTML ---
-    // Selecionamos todos os elementos do formulário com os quais vamos interagir.
+    // --- 1. SELEÇÃO DOS ELEMENTOS DA PÁGINA ---
     const form = document.querySelector('.booking_options form');
     const nomeInput = document.getElementById('nome');
     const telefoneInput = document.getElementById('telefone');
-    const servicoSelect = document.getElementById('servico'); // O <select> original
     const dataInput = document.getElementById('data');
     const horariosContainer = document.getElementById('horarios-container');
+    
+    // Elementos que serão manipulados, mas cuja lógica está no selectCustom.js
+    const servicoSelect = document.getElementById('servico');
+    const customOptionsContainer = document.querySelector('.custom-options');
 
-    // Variável para guardar o horário que o cliente clicar.
     let horarioSelecionado = null;
 
-    // --- 2. LÓGICA PARA BUSCAR E RENDERIZAR OS HORÁRIOS ---
+    // --- 2. LÓGICA DE DADOS DA PÁGINA ---
 
-    // Função principal que busca e mostra os horários.
-    const fetchAndRenderHorarios = async () => {
-        const data = dataInput.value;
-        const servico = servicoSelect.value;
-        horarioSelecionado = null; // Reseta a seleção anterior
-
-        // Só busca na API se o usuário já selecionou uma data E um serviço.
-        if (!data || !servico) {
-            horariosContainer.innerHTML = ''; // Limpa os horários se faltar informação
-            return;
-        }
-
-        // Mostra um feedback para o usuário enquanto a API é chamada.
-        horariosContainer.innerHTML = '<p>Verificando horários disponíveis...</p>';
-
+    /**
+     * Busca os serviços na API e cria as opções no HTML.
+     */
+    const popularServicos = async () => {
         try {
-            // Chama nossa API de disponibilidade, passando data e serviço na URL.
-            const response = await fetch(`http://localhost:5000/disponibilidade?data=${data}&servico=${servico}`);
-            if (!response.ok) {
-                throw new Error('Não foi possível buscar os horários. Tente outra data.');
-            }
-            const horarios = await response.json();
+            const response = await fetch('http://localhost:5000/servicos');
+            if (!response.ok) throw new Error('Não foi possível carregar os serviços.');
             
-            // Com a lista de horários em mãos, chama a função para criar os botões.
-            renderizarHorarios(horarios);
+            const servicos = await response.json();
+            
+            servicoSelect.innerHTML = '<option value="">Selecione o serviço</option>';
+            customOptionsContainer.innerHTML = '';
 
+            servicos.forEach(servico => {
+                // Popula o <select> escondido
+                const option = document.createElement('option');
+                option.value = servico.id;
+                option.textContent = servico.nome;
+                servicoSelect.appendChild(option);
+
+                // Popula os <div> visíveis
+                const customOption = document.createElement('div');
+                customOption.className = 'custom-option';
+                customOption.textContent = servico.nome;
+                customOption.dataset.value = servico.id;
+                customOptionsContainer.appendChild(customOption);
+            });
         } catch (error) {
-            horariosContainer.innerHTML = `<p style="color: #ff6b6b;">${error.message}</p>`;
+            console.error(error);
+            // Poderíamos adicionar uma mensagem de erro visual aqui
         }
     };
 
-    function renderizarHorarios(horarios) {
-        horariosContainer.innerHTML = ''; // Limpa a mensagem de "carregando"
+    /**
+     * Busca e renderiza os horários disponíveis com base na data e serviço.
+     */
+    const fetchAndRenderHorarios = async () => {
+        const data = dataInput.value;
+        const servicoId = servicoSelect.value;
+        horarioSelecionado = null;
 
-        if (horarios.length === 0) {
-            horariosContainer.innerHTML = '<p>Nenhum horário disponível para esta data e serviço.</p>';
+        if (!data || !servicoId) {
+            horariosContainer.innerHTML = '';
             return;
         }
 
+        horariosContainer.innerHTML = '<p>Verificando horários disponíveis...</p>';
+
+        try {
+            // Usa o servico_id para a busca, como ajustamos no backend
+            const response = await fetch(`http://localhost:5000/disponibilidade?data=${data}&servico_id=${servicoId}`);
+            if (!response.ok) {
+                const errorData = await response.json();
+                throw new Error(errorData.message || 'Não foi possível buscar os horários.');
+            }
+            const horarios = await response.json();
+            renderizarHorarios(horarios);
+        } catch (error) {
+            horariosContainer.innerHTML = `<p style="color: red;">${error.message}</p>`;
+        }
+    };
+
+    /**
+     * Cria os botões de horário na tela.
+     */
+    function renderizarHorarios(horarios) {
+        horariosContainer.innerHTML = '';
+        if (horarios.length === 0) {
+            horariosContainer.innerHTML = '<p>Nenhum horário disponível para esta data.</p>';
+            return;
+        }
         horarios.forEach(horario => {
             const button = document.createElement('button');
-            button.type = 'button'; // Importante para não submeter o formulário
+            button.type = 'button';
             button.className = 'horario-btn';
             button.textContent = horario;
-
             button.addEventListener('click', () => {
-                horarioSelecionado = horario; // Guarda o horário que o cliente clicou
-
-                // Efeito visual para destacar o botão selecionado
+                horarioSelecionado = horario;
                 document.querySelectorAll('.horario-btn').forEach(btn => btn.classList.remove('selecionado'));
                 button.classList.add('selecionado');
             });
-
             horariosContainer.appendChild(button);
         });
     }
 
-    // Adiciona os "ouvintes" para disparar a busca sempre que a data ou o serviço mudar.
-    dataInput.addEventListener('change', fetchAndRenderHorarios);
+    // --- 3. EVENT LISTENERS DA PÁGINA ---
+
+    // Ouve as mudanças que o `selectCustom.js` dispara no <select> escondido
     servicoSelect.addEventListener('change', fetchAndRenderHorarios);
+    dataInput.addEventListener('change', fetchAndRenderHorarios);
 
-
-    // --- 3. LÓGICA PARA O ENVIO FINAL DO FORMULÁRIO ---
+    // Ouve o envio do formulário para criar o agendamento
     form.addEventListener('submit', async (event) => {
-        event.preventDefault(); // Impede o comportamento padrão de recarregar a página
+        event.preventDefault();
 
-        // Validação final antes do envio
         if (!horarioSelecionado || !dataInput.value || !servicoSelect.value || !nomeInput.value || !telefoneInput.value) {
             alert('Por favor, preencha todos os campos e selecione um horário.');
             return;
         }
 
-        // Monta o objeto com todos os dados para enviar para a API
         const dadosAgendamento = {
             nome_cliente: nomeInput.value,
             telefone_cliente: telefoneInput.value,
-            servico: servicoSelect.value,
-            data_hora: `${dataInput.value} ${horarioSelecionado}:00` // Junta "AAAA-MM-DD" com "HH:MM"
+            servico_id: servicoSelect.value,
+            data_hora: `${dataInput.value} ${horarioSelecionado}:00`,
+            status: "Confirmado"
         };
         
         try {
-            // Faz a requisição POST final para a rota de criação de agendamentos
             const response = await fetch('http://localhost:5000/agendamentos', {
                 method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
+                headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(dadosAgendamento),
             });
-
             const responseData = await response.json();
-
             if (!response.ok) {
-                // Usa a mensagem de erro específica do backend (ex: "horário ocupado")
                 throw new Error(responseData.message || 'Não foi possível realizar o agendamento.');
             }
-
-            alert(`Agendamento realizado com sucesso! ID do agendamento: ${responseData.insertId}`);
-            form.reset(); // Limpa o formulário
-            horariosContainer.innerHTML = ''; // Limpa os botões de horário
-
+            alert(`Agendamento realizado com sucesso! ID: ${responseData.insertId}`);
+            form.reset();
+            horariosContainer.innerHTML = '';
+            document.querySelector('.select-text').textContent = 'Selecione o serviço';
+            document.querySelector('.select-text').classList.add('placeholder');
         } catch (error) {
             alert(`Erro: ${error.message}`);
         }
     });
 
+    // --- 4. INICIALIZAÇÃO ---
+    // Inicia tudo carregando os serviços da API.
+    popularServicos();
 });
