@@ -152,6 +152,23 @@ const getRevenuePerDayOfWeek = async () => {
     return revenue;
 };
 
+const getUniqueClientes = async () => {
+    const query = `
+        SELECT 
+            nome_cliente, 
+            telefone_cliente, 
+            MAX(data_hora) as ultima_visita
+        FROM 
+            agendamentos
+        GROUP BY 
+            nome_cliente, telefone_cliente
+        ORDER BY 
+            nome_cliente ASC;
+    `;
+    const [clientes] = await connection.execute(query);
+    return clientes;
+};
+
 module.exports = {
     getAll,
     createAgendamento,
@@ -163,5 +180,6 @@ module.exports = {
     getServiceStats,
     getStatusStatsThisWeek,
     getFaturamentoSemana,
-    getRevenuePerDayOfWeek
+    getRevenuePerDayOfWeek,
+    getUniqueClientes
 };

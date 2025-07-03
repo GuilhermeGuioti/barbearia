@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Painel - Barbearia</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+  
+  <link rel="stylesheet" href="assets/css/painel.css">
+</head>
+<body>
+  <aside class="sidebar">
+    <div class="sidebar-header">
+      <h1>Felipe</h1>
+      <h2>Barbearia</h2>
+    </div>
+
+    <nav class="sidebar-nav">
+      <ul>
+        <li>
+          <a href="painel.html">
+            <i class="fa-solid fa-calendar-days"></i>
+            <span>Agenda</span>
+          </a>
+        </li>
+        <li>
+          <a href="dashboard.html">
+            <i class="fa-solid fa-chart-simple"></i>
+            <span>Dashboard</span>
+          </a>
+        </li>
+        <li>
+          <a href="#" class="active">
+            <i class="fa-solid fa-users"></i>
+            <span>Clientes</span>
+          </a>
+        </li>
+        <li>
+          <a href="#">
+            <i class="fa-solid fa-cogs"></i>
+            <span>Configurações</span>
+          </a>
+        </li>
+      </ul>
+    </nav>
+
+    <div class="sidebar-footer">
+      <a href="#" id="logout-button">
+        <i class="fa-solid fa-right-from-bracket"></i>
+        <span>Sair</span>
+      </a>
+    </div>
+  </aside>
+
+  <main class="main-content">
+      <header class="page-header">
+          <h2>Meus Clientes</h2>
+          </header>
+
+      <div class="table-container">
+          <table>
+              <thead>
+                  <tr>
+                      <th>Nome do Cliente</th>
+                      <th>Telefone</th>
+                      <th>Última Visita</th>
+                  </tr>
+              </thead>
+              <tbody id="client-list-body">
+                  </tbody>
+          </table>
+      </div>
+  </main>
+
+<script defer src="assets/js/clientes.js"></script>
+</body>
+</html>

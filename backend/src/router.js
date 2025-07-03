@@ -6,6 +6,7 @@ const disponibilidadeController = require('./controllers/disponibilidadeControll
 const usuarioController = require('./controllers/usuarioController');
 const dashboardController = require('./controllers/dashboardController');
 const servicoController = require('./controllers/servicoController');
+const clienteController = require('./controllers/clienteController');
 
 // Middlewares
 const agendamentoMiddlewares = require('./middlewares/agendamentoMiddlewares');
@@ -62,5 +63,6 @@ router.get('/dashboard/faturamento', authMiddleware, dashboardController.getFatu
 
 router.get('/dashboard/revenue-stats', authMiddleware, dashboardController.getRevenueStats);
 
+router.get('/clientes', authMiddleware, clienteController.getAllClientes);
 
 module.exports = router;
