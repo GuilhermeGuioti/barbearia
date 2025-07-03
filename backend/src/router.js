@@ -58,6 +58,9 @@ router.get('/dashboard/services', authMiddleware, dashboardController.getService
 
 router.get('/dashboard/status-stats', authMiddleware, dashboardController.getStatusStats);
 
+router.get('/dashboard/faturamento', authMiddleware, dashboardController.getFaturamento);
+
+router.get('/dashboard/revenue-stats', authMiddleware, dashboardController.getRevenueStats);
 
 
 module.exports = router;

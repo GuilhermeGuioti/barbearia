@@ -1,3 +1,5 @@
+const faturamentoSemanaEl = document.getElementById('faturamento-semana');
+
 document.addEventListener('DOMContentLoaded', () => {
     const token = localStorage.getItem('authToken');
     if (!token) {
@@ -14,46 +16,53 @@ document.addEventListener('DOMContentLoaded', () => {
     /**
      * Função principal: busca os dados e chama as funções de renderização.
      */
-    const fetchAndRenderDashboard = async () => {
-        try {
-            const response = await fetch('http://localhost:5000/dashboard/stats', {
-                headers: { 'Authorization': `Bearer ${token}` }
-            });
+    // Encontre e substitua esta função no seu dashboard.js
+const fetchAndRenderDashboard = async () => {
+    try {
+        const response = await fetch('http://localhost:5000/dashboard/stats', {
+            headers: { 'Authorization': `Bearer ${token}` }
+        });
+        if (!response.ok) throw new Error('Erro ao buscar dados do dashboard.');
+        
+        const stats = await response.json();
+        
+        // --- LÓGICA CORRIGIDA PARA MONTAR A SEMANA DE DOMINGO A SÁBADO ---
+        const weekData = new Map();
+        const diasDaSemana = ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb'];
+        
+        const today = new Date();
+        const firstDayOfWeek = new Date(today.setDate(today.getDate() - today.getDay())); // Encontra o último Domingo
 
-            if (!response.ok) throw new Error('Erro ao buscar dados do dashboard.');
-            const stats = await response.json();
-
-            // --- Prepara os dados ---
-            const last7Days = new Map();
-            const diasDaSemana = ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb'];
-
-            for (let i = 6; i >= 0; i--) {
-                const d = new Date();
-                d.setDate(d.getDate() - i);
-                const formattedDate = d.toISOString().slice(0, 10);
-                const dayName = diasDaSemana[d.getDay()];
-                last7Days.set(formattedDate, { count: 0, dayName: dayName });
-            }
-
-            stats.forEach(stat => {
-                const formattedDate = new Date(stat.dia).toISOString().slice(0, 10);
-                if (last7Days.has(formattedDate)) {
-                    last7Days.get(formattedDate).count = stat.total;
-                }
-            });
-
-            const labels = Array.from(last7Days.values()).map(d => d.dayName);
-            const dataPoints = Array.from(last7Days.values()).map(d => d.count);
-
-            // --- Chama as funções para renderizar, agora passando os parâmetros corretos ---
-            updateDashboardSummary(dataPoints, labels); // Passando os labels (nomes dos dias)
-            renderChart(labels, dataPoints);
-
-        } catch (error) {
-            console.error("Erro no dashboard:", error);
-            if (chartContainer) chartContainer.innerHTML = `<p style="color: var(--text-error);">${error.message}</p>`;
+        // 1. Cria o mapa para a semana inteira (Dom a Sáb)
+        for (let i = 0; i < 7; i++) {
+            const day = new Date(firstDayOfWeek);
+            day.setDate(day.getDate() + i);
+            
+            const formattedDate = day.toISOString().slice(0, 10); // Formato AAAA-MM-DD
+            const dayName = diasDaSemana[i];
+            weekData.set(formattedDate, { count: 0, dayName: dayName });
         }
-    };
+        
+        // 2. Preenche o mapa com os dados da API
+        stats.forEach(stat => {
+            const formattedDate = stat.dia.slice(0, 10);
+            if (weekData.has(formattedDate)) {
+                weekData.get(formattedDate).count = stat.total;
+            }
+        });
+
+        const labels = Array.from(weekData.values()).map(d => d.dayName);
+        const dataPoints = Array.from(weekData.values()).map(d => d.count);
+
+        // Chama as funções para renderizar
+        updateDashboardSummary(dataPoints, labels);
+        renderChart(labels, dataPoints);
+
+    } catch (error) {
+        console.error("Erro no dashboard:", error);
+        if (chartContainer) chartContainer.innerHTML = `<p style="color: var(--text-error);">${error.message}</p>`;
+    }
+};
 
     /**
      * Atualiza os cards de resumo com os dados calculados.
@@ -270,12 +279,142 @@ function renderStatusChart(labels, data) {
     });
 }
 
-// Inicia o processo para o gráfico de barras
-fetchAndRenderDashboard();
+/**
+ * Busca o faturamento da semana e atualiza o card.
+ */
+const fetchAndRenderFaturamento = async () => {
+    try {
+        const response = await fetch('http://localhost:5000/dashboard/faturamento', {
+            headers: { 'Authorization': `Bearer ${token}` }
+        });
+        if (!response.ok) throw new Error('Erro ao buscar faturamento.');
 
-// Inicia o processo para o novo gráfico de pizza
-fetchAndRenderPieChart();
+        const data = await response.json();
 
-fetchAndRenderStatusChart();
+        // Formata o número para o padrão monetário brasileiro
+        const faturamentoFormatado = parseFloat(data.faturamentoTotal).toLocaleString('pt-BR', {
+            style: 'currency',
+            currency: 'BRL'
+        });
+
+        faturamentoSemanaEl.textContent = faturamentoFormatado;
+
+    } catch (error) {
+        console.error("Erro ao buscar faturamento:", error);
+        faturamentoSemanaEl.textContent = 'Erro';
+    }
+};
+
+/**
+ * Busca os dados de faturamento da semana e chama a função para renderizar o gráfico de linha.
+ */
+const fetchAndRenderRevenueChart = async () => {
+    try {
+        const response = await fetch('http://localhost:5000/dashboard/revenue-stats', {
+            headers: { 'Authorization': `Bearer ${token}` }
+        });
+        if (!response.ok) throw new Error('Erro ao buscar dados de faturamento.');
+
+        const revenueStats = await response.json();
+
+        // Prepara os dados para o gráfico, garantindo que todos os 7 dias da semana apareçam
+        const weekData = new Map();
+        const diasDaSemana = ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb'];
+
+        const today = new Date();
+        const firstDayOfWeek = new Date(today.setDate(today.getDate() - today.getDay()));
+
+        for (let i = 0; i < 7; i++) {
+            const day = new Date(firstDayOfWeek);
+            day.setDate(day.getDate() + i);
+            const formattedDate = day.toISOString().slice(0, 10);
+            weekData.set(formattedDate, { total: 0, dayName: diasDaSemana[i] });
+        }
+
+        revenueStats.forEach(stat => {
+            const formattedDate = stat.dia.slice(0, 10);
+            if (weekData.has(formattedDate)) {
+                weekData.get(formattedDate).total = parseFloat(stat.total);
+            }
+        });
+
+        const labels = Array.from(weekData.values()).map(d => d.dayName);
+        const dataPoints = Array.from(weekData.values()).map(d => d.total);
+
+        renderRevenueChart(labels, dataPoints);
+
+    } catch (error) {
+        console.error("Erro no gráfico de faturamento:", error);
+    }
+};
+
+//Renderiza o gráfico de linha de faturamento.
+function renderRevenueChart(labels, data) {
+    const ctx = document.getElementById('revenueChart').getContext('2d');
+
+    if (window.myRevenueChart instanceof Chart) {
+        window.myRevenueChart.destroy();
+    }
+
+    window.myRevenueChart = new Chart(ctx, {
+        type: 'line', // <<< O tipo agora é 'line'
+        data: {
+            labels: labels,
+            datasets: [{
+                label: 'Faturamento R$',
+                data: data,
+                backgroundColor: 'rgba(44, 90, 77, 0.2)',  // Verde do tema com mais transparência
+                borderColor: 'rgba(44, 90, 77, 1)',      // Verde do tema sólido
+                borderWidth: 2,
+                fill: true, // Preenche a área abaixo da linha
+                tension: 0.4 // Deixa a linha com curvas suaves
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    ticks: {
+                        color: '#b0b0b0',
+                        // Formata os números do eixo Y como moeda
+                        callback: function(value) {
+                            return 'R$ ' + value.toFixed(2).replace('.', ',');
+                        }
+                    },
+                    grid: { color: 'rgba(255, 255, 255, 0.05)' }
+                },
+                x: {
+                    ticks: { color: '#b0b0b0' },
+                    grid: { display: false }
+                }
+            },
+            plugins: {
+                legend: { display: false },
+                tooltip: {
+                    backgroundColor: '#121212',
+                    titleColor: '#ffffff',
+                    bodyColor: '#e0e0e0',
+                    callbacks: {
+                        label: function(context) {
+                            let label = 'Faturamento: ';
+                            if (context.parsed.y !== null) {
+                                label += new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(context.parsed.y);
+                            }
+                            return label;
+                        }
+                    }
+                }
+            }
+        }
+    });
+}
+
+fetchAndRenderDashboard();   // Gráfico de barras
+fetchAndRenderPieChart();      // Gráfico de serviços
+fetchAndRenderStatusChart();   // Gráfico de status
+fetchAndRenderFaturamento(); // Financeiro
+fetchAndRenderRevenueChart();
 
 });

@@ -2,7 +2,6 @@ const connection = require('./connection');
 const { getServiceDuration } = require('../utils/services'); // Importe nosso novo utilitário
 
 const getAll = async () => {
-    // Esta query agora "junta" as tabelas agendamentos e servicos
     const query = `
         SELECT 
             ag.id,
@@ -10,8 +9,9 @@ const getAll = async () => {
             ag.telefone_cliente,
             ag.data_hora,
             ag.status,
-            s.nome AS servico_nome,  -- Pega o nome da tabela de serviços
-            s.preco AS servico_preco -- Pega o preço da tabela de serviços
+            ag.servico_id, -- << ADICIONE ESTA LINHA
+            s.nome AS servico_nome,
+            s.preco AS servico_preco
         FROM 
             agendamentos ag
         JOIN 
@@ -77,55 +77,79 @@ const getAgendamentosPorData = async (data) => {
     return agendamentos;
 };
 
+// Função para o gráfico de barras
 const getCountLast7Days = async () => {
-    // Esta query SQL agrupa os agendamentos por dia e conta quantos existem em cada dia.
-    // Ela pega os dados de 6 dias atrás até hoje.
     const query = `
-        SELECT 
-            DATE(data_hora) as dia, 
-            COUNT(id) as total
+        SELECT DATE(data_hora) as dia, COUNT(id) as total
         FROM agendamentos
-        WHERE data_hora >= CURDATE() - INTERVAL 6 DAY AND data_hora < CURDATE() + INTERVAL 1 DAY
-        GROUP BY DATE(data_hora)
-        ORDER BY dia ASC;
+        WHERE YEARWEEK(data_hora, 0) = YEARWEEK(CURDATE(), 0) -- Usando 0 para Domingo
+        GROUP BY DATE(data_hora) ORDER BY dia ASC;
     `;
     const [stats] = await connection.execute(query);
     return stats;
 };
 
+// Função para o gráfico de serviços
 const getServiceStats = async () => {
-    // A query agora une as tabelas 'agendamentos' e 'servicos'
+    const query = `
+        SELECT s.nome AS servico, COUNT(ag.id) as total
+        FROM agendamentos ag JOIN servicos s ON ag.servico_id = s.id
+        WHERE YEARWEEK(ag.data_hora, 0) = YEARWEEK(CURDATE(), 0) -- Usando 0 para Domingo
+        GROUP BY s.nome ORDER BY total DESC;
+    `;
+    const [stats] = await connection.execute(query);
+    return stats;
+};
+
+// Função para o gráfico de status
+const getStatusStatsThisWeek = async () => {
+    const query = `
+        SELECT status, COUNT(id) as total
+        FROM agendamentos
+        WHERE YEARWEEK(data_hora, 0) = YEARWEEK(CURDATE(), 0) -- Usando 0 para Domingo
+        GROUP BY status;
+    `;
+    const [stats] = await connection.execute(query);
+    return stats;
+};
+
+const getFaturamentoSemana = async () => {
+    // SUM(s.preco) soma os preços.
+    // O status é filtrado para 'Concluído'.
+    // A data é filtrada pela semana atual (Dom-Sáb).
+    const query = `
+        SELECT SUM(s.preco) AS faturamentoTotal
+        FROM agendamentos ag
+        JOIN servicos s ON ag.servico_id = s.id
+        WHERE 
+            ag.status = 'Concluído' AND
+            YEARWEEK(ag.data_hora, 0) = YEARWEEK(CURDATE(), 0);
+    `;
+    const [[resultado]] = await connection.execute(query); // Usamos [[resultado]] para pegar o primeiro objeto do array
+    return resultado;
+};
+
+
+//Calcula o faturamento por dia da semana atual (Dom-Sáb),
+const getRevenuePerDayOfWeek = async () => {
     const query = `
         SELECT 
-            s.nome AS servico,  -- Pega o NOME do serviço da tabela 'servicos'
-            COUNT(ag.id) as total
+            DATE(ag.data_hora) as dia, 
+            SUM(s.preco) as total
         FROM 
             agendamentos ag
         JOIN 
             servicos s ON ag.servico_id = s.id
         WHERE 
-            YEARWEEK(ag.data_hora, 1) = YEARWEEK(CURDATE(), 1)
+            ag.status = 'Concluído' AND
+            YEARWEEK(ag.data_hora, 0) = YEARWEEK(CURDATE(), 0)
         GROUP BY 
-            s.nome -- Agrupa pelo nome do serviço
+            DATE(ag.data_hora)
         ORDER BY 
-            total DESC;
+            dia ASC;
     `;
-    const [stats] = await connection.execute(query);
-    return stats;
-};
-
-const getStatusStatsThisWeek = async () => {
-    // YEARWEEK(data_hora) retorna o ano e a semana de uma data.
-    // YEARWEEK(CURDATE()) retorna o ano e a semana de hoje.
-    // Comparamos os dois para pegar apenas os registros da semana corrente.
-    const query = `
-        SELECT status, COUNT(id) as total
-        FROM agendamentos
-        WHERE YEARWEEK(data_hora, 1) = YEARWEEK(CURDATE(), 1)
-        GROUP BY status;
-    `;
-    const [stats] = await connection.execute(query);
-    return stats;
+    const [revenue] = await connection.execute(query);
+    return revenue;
 };
 
 module.exports = {
@@ -138,4 +162,6 @@ module.exports = {
     getCountLast7Days,
     getServiceStats,
     getStatusStatsThisWeek,
+    getFaturamentoSemana,
+    getRevenuePerDayOfWeek
 };

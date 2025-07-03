@@ -30,8 +30,31 @@ const getStatusStats = async (_request, response) => {
     }
 };
 
+const getFaturamento = async (_request, response) => {
+    try {
+        const faturamento = await agendamentoModel.getFaturamentoSemana();
+        // Se não houver faturamento, o valor será null. Retornamos 0 nesse caso.
+        return response.status(200).json({ faturamentoTotal: faturamento.faturamentoTotal || 0 });
+    } catch (error) {
+        console.error('Erro ao buscar faturamento:', error);
+        return response.status(500).json({ message: 'Erro interno no servidor' });
+    }
+};
+
+const getRevenueStats = async (_request, response) => {
+    try {
+        const revenue = await agendamentoModel.getRevenuePerDayOfWeek();
+        return response.status(200).json(revenue);
+    } catch (error) {
+        console.error('Erro ao buscar estatísticas de faturamento:', error);
+        return response.status(500).json({ message: 'Erro interno no servidor' });
+    }
+};
+
 module.exports = {
     getStats,
     getServiceStats,
     getStatusStats,
+    getFaturamento,
+    getRevenueStats
 };

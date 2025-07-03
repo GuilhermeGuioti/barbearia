@@ -124,21 +124,51 @@ body {
     align-items: center;
     gap: 10px;
 }
-.date-selector input[type="date"] {
-    background-color: #2a2a2a;
-    border: 1px solid #3a3a3a;
-    color: #e0e0e0;
-    padding: 16px;
+
+/* REGRA PADRONIZADA PARA AMBOS OS ELEMENTOS */
+.date-selector input[type="date"],
+.date-selector .btn-secondary {
+    /* Box Model e Tamanho */
+    box-sizing: border-box;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 48px; /* Altura fixa para ambos */
+    padding: 0 15px; /* Padding horizontal */
+    
+    /* Aparência */
+    background-color: var(--bg-element);
+    border: 1px solid var(--border-primary);
     border-radius: 8px;
+    color: var(--text-primary);
+    font-family: var(--font-primary);
+    font-size: 1rem; /* Tamanho da fonte padronizado */
+    font-weight: 500;
+    cursor: pointer;
+    transition: background-color 0.2s ease, border-color 0.2s ease;
+}
+
+/* Efeito hover para ambos */
+.date-selector input[type="date"]:hover,
+.date-selector .btn-secondary:hover {
+    background-color: var(--bg-hover);
+    border-color: var(--border-primary);
+}
+
+/* Removemos o padding extra que o botão secundário tinha para usar o da regra nova */
+.btn-secondary {
+    padding: 0 15px;
     font-size: 1rem;
 }
-.date-selector input[type="date"]::-webkit-calendar-picker-indicator {
-    cursor: pointer;
-    opacity: 0.6; 
-    filter: invert(1); 
+
+.date-selector input::-webkit-calendar-picker-indicator {
+ filter: invert(100%);
+ cursor: pointer; /* Adiciona cursor para indicar que é clicável */
 }
-.date-selector input[type="date"]::-webkit-calendar-picker-indicator:hover {
-    opacity: 0.8;
+
+.date-selector input::-moz-focus-inner {
+ border: 0; /* Remove borda extra no Firefox */
+ padding: 0;
 }
 
 /* --- Cards de Resumo --- */

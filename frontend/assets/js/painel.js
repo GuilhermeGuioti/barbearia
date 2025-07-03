@@ -176,27 +176,62 @@ function renderizarAgendamentos(agendamentos) {
     };
 
     // Abre e preenche o modal com os dados do agendamento clicado
-    function handleEdit(id) {
-    // Encontra o agendamento completo no nosso cache pelo ID
+ function handleEdit(id) {
+    // Encontra o agendamento completo que já temos na memória (no cache)
     const agendamento = agendamentosCache.find(ag => ag.id == id);
-    if (!agendamento) return;
+    if (!agendamento) {
+        alert('Erro: Agendamento não encontrado.');
+        return;
+    }
 
-    // Preenche os campos do formulário no modal
-    document.getElementById('edit-agendamento-id').value = agendamento.id;
-    document.getElementById('edit-nome').value = agendamento.nome_cliente;
-    document.getElementById('edit-telefone').value = agendamento.telefone_cliente;
-    document.getElementById('edit-servico').value = agendamento.servico;
-    document.getElementById('edit-status').value = agendamento.status;
-    
-    // O input datetime-local precisa do formato AAAA-MM-DDTHH:MM
-    // Este código converte a data do banco para este formato
-    const dataParaInput = new Date(new Date(agendamento.data_hora) - new Date().getTimezoneOffset() * 60000).toISOString().slice(0, 16);
-    document.getElementById('edit-data').value = dataParaInput;
-    
-    // Mostra o modal de edição
-    editModal.style.display = 'flex';
+    // Seleciona o <select> de serviços de dentro do modal de edição
+    const servicoEditSelect = document.getElementById('edit-servico');
 
-    fetchAgendamentos(dataFiltroInput.value);
+    // --- LÓGICA PARA POPULAR O SELECT DE SERVIÇOS ---
+    // Fazemos uma chamada à API para pegar a lista de serviços atualizada
+    fetch('http://localhost:5000/servicos')
+        .then(response => response.json())
+        .then(servicos => {
+            // Limpa opções antigas
+            servicoEditSelect.innerHTML = '';
+
+            // Cria uma nova <option> para cada serviço
+            servicos.forEach(servico => {
+                const option = document.createElement('option');
+                option.value = servico.id; // O valor da opção é o ID
+                option.textContent = servico.nome;
+                servicoEditSelect.appendChild(option);
+            });
+
+            // --- A MÁGICA: PREENCHE O FORMULÁRIO DEPOIS DE POPULAR O SELECT ---
+            
+            // Preenche os outros campos
+            document.getElementById('edit-agendamento-id').value = agendamento.id;
+            document.getElementById('edit-nome').value = agendamento.nome_cliente;
+            document.getElementById('edit-telefone').value = agendamento.telefone_cliente;
+            document.getElementById('edit-status').value = agendamento.status;
+            
+             // --- CORREÇÃO DE FUSO HORÁRIO PARA O INPUT ---
+            const dataObj = new Date(agendamento.data_hora);
+            // Calcula o deslocamento do fuso horário em milissegundos
+            const fusoHorarioOffset = dataObj.getTimezoneOffset() * 60000;
+            // Cria uma nova data ajustada para o horário local
+            const dataLocal = new Date(dataObj - fusoHorarioOffset);
+            // Converte para o formato que o input "datetime-local" aceita (AAAA-MM-DDTHH:MM)
+            const dataParaInput = dataLocal.toISOString().slice(0, 16);
+            
+            document.getElementById('edit-data').value = dataParaInput;
+            
+            // Pré-seleciona o serviço correto usando o servico_id que agora vem da API
+            servicoEditSelect.value = agendamento.servico_id;
+
+            // Finalmente, exibe o modal
+            editModal.style.display = 'flex';
+        })
+        .catch(error => {
+            console.error('Erro ao carregar serviços para o modal:', error);
+            alert('Não foi possível abrir a janela de edição.');
+        });
 }
 
 // Envia os dados atualizados para a API quando o formulário do modal é salvo
@@ -223,8 +258,8 @@ async function handleUpdate(event) {
     const dadosAtualizados = {
         nome_cliente: document.getElementById('edit-nome').value,
         telefone_cliente: document.getElementById('edit-telefone').value,
-        servico: document.getElementById('edit-servico').value,
-        data_hora: dataFormatadaParaMySQL, // << USA A DATA FORMATADA
+        servico_id: document.getElementById('edit-servico').value, // << CORREÇÃO AQUI
+        data_hora: dataFormatadaParaMySQL,
         status: document.getElementById('edit-status').value,
     };
     
