@@ -65,9 +65,18 @@ function renderizarAgendamentos(agendamentos) {
 
         const card = document.createElement('div');
         card.className = 'agendamento-card';
-        card.dataset.id = agendamento.id;
 
-        // --- AQUI ESTÁ A MUDANÇA PRINCIPAL: O HTML do Card ---
+        if (agendamento.tipo === 'bloqueio') {
+            card.classList.add('tipo-bloqueio');
+        }
+
+        if (agendamento.status === 'Concluído') {
+            // Se for, adiciona a classe que o deixa com o estilo de finalizado.
+            card.classList.add('status-concluido');
+        }
+
+        card.dataset.id = agendamento.id;
+        
         // Ajustado para ter cada informação em uma linha, como no seu layout.
         card.innerHTML = `
         <div class="card-time-info">
@@ -80,6 +89,7 @@ function renderizarAgendamentos(agendamentos) {
             <span class="card-phone"><i class="fa-solid fa-phone"></i> ${agendamento.telefone_cliente}</span>
         </div>
         <div class="card-actions">
+            <button class="btn-complete" title="Marcar como Concluído" data-id="${agendamento.id}"><i class="fa-solid fa-check"></i></button>
             <button class="btn-edit" title="Editar Agendamento" data-id="${agendamento.id}"><i class="fa-solid fa-pencil"></i></button>
             <button class="btn-delete" title="Excluir Agendamento" data-id="${agendamento.id}"><i class="fa-solid fa-trash"></i></button>
         </div>
@@ -284,12 +294,47 @@ async function handleUpdate(event) {
     }
 }
 
+const handleMarkAsComplete = async (id) => {
+    // Objeto apenas com o campo que queremos mudar
+    const dadosAtualizados = { status: 'Concluído' };
+
+    try {
+        const token = localStorage.getItem('authToken');
+        
+        // A MUDANÇA ESTÁ AQUI: Usando a rota e o método corretos
+        const response = await fetch(`http://localhost:5000/agendamentos/${id}/status`, {
+            method: 'PATCH', // Usando o método PATCH
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+            },
+            body: JSON.stringify(dadosAtualizados) // Enviando apenas o status
+        });
+
+        if (!response.ok) {
+            throw new Error('Falha ao atualizar o status.');
+        }
+
+        // Atualiza a interface em tempo real
+        const card = document.querySelector(`.agendamento-card[data-id='${id}']`);
+        if (card) {
+            card.classList.add('status-concluido');
+        }
+        
+        // Chama as funções para atualizar os cards de resumo e os gráficos
+        // (Isso garante que o faturamento e o gráfico de status sejam atualizados)
+        // fetchAndRenderDashboardData(); // Supondo que você tenha uma função que chama todas as buscas do dashboard
+
+    } catch (error) {
+        alert(`Erro: ${error.message}`);
+    }
+};
+
 
     // --- 4. OUVINTES DE EVENTOS ---
     logoutButton.addEventListener('click', (event) => {
         event.preventDefault();
         localStorage.removeItem('authToken');
-        alert('Você saiu do painel.');
         window.location.href = 'login.html';
     });
 
@@ -306,7 +351,12 @@ async function handleUpdate(event) {
         if (event.target.classList.contains('btn-edit')) {
             const id = event.target.dataset.id;
             handleEdit(id);
-        } 
+        }
+        const completeButton = event.target.closest('.btn-complete');
+        if (completeButton) {
+            const id = completeButton.dataset.id;
+            handleMarkAsComplete(id);
+        }
     });
 
     // Ouve o envio do formulário de edição

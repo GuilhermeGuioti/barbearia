@@ -2,6 +2,7 @@ const connection = require('./connection');
 const { getServiceDuration } = require('../utils/services'); // Importe nosso novo utilitário
 
 const getAll = async () => {
+    // A query agora junta as tabelas E filtra para mostrar apenas agendamentos reais.
     const query = `
         SELECT 
             ag.id,
@@ -9,13 +10,15 @@ const getAll = async () => {
             ag.telefone_cliente,
             ag.data_hora,
             ag.status,
-            ag.servico_id, -- << ADICIONE ESTA LINHA
+            ag.servico_id,
             s.nome AS servico_nome,
             s.preco AS servico_preco
         FROM 
             agendamentos ag
         JOIN 
             servicos s ON ag.servico_id = s.id
+        WHERE
+            ag.tipo = 'agendamento' -- << A MÁGICA ACONTECE AQUI
         ORDER BY 
             ag.data_hora ASC;
     `;
@@ -153,6 +156,7 @@ const getRevenuePerDayOfWeek = async () => {
 };
 
 const getUniqueClientes = async () => {
+    // A query agora tem uma cláusula WHERE para filtrar apenas por agendamentos.
     const query = `
         SELECT 
             nome_cliente, 
@@ -160,6 +164,8 @@ const getUniqueClientes = async () => {
             MAX(data_hora) as ultima_visita
         FROM 
             agendamentos
+        WHERE 
+            tipo = 'agendamento' -- << A MÁGICA ACONTECE AQUI
         GROUP BY 
             nome_cliente, telefone_cliente
         ORDER BY 
@@ -167,6 +173,56 @@ const getUniqueClientes = async () => {
     `;
     const [clientes] = await connection.execute(query);
     return clientes;
+};
+
+const createBloqueio = async (bloqueio) => {
+    const { nome_cliente, data_hora, duracao_minutos } = bloqueio;
+
+    // Calcula a data_hora final
+    const dataInicio = new Date(data_hora);
+    const dataFim = new Date(dataInicio.getTime() + duracao_minutos * 60000);
+
+    // Insere o bloqueio como um agendamento especial
+    const query = `
+        INSERT INTO agendamentos (nome_cliente, data_hora, servico_id, telefone_cliente, status, tipo) 
+        VALUES (?, ?, ?, ?, 'Confirmado', 'bloqueio')
+    `;
+    // Usamos valores padrão para campos não aplicáveis
+    const [result] = await connection.execute(query, [nome_cliente, data_hora, 1, 'N/A']); 
+    return { insertId: result.insertId };
+};
+
+const getAllBloqueios = async () => {
+    const query = `
+        SELECT id, nome_cliente AS motivo, data_hora 
+        FROM agendamentos 
+        WHERE tipo = 'bloqueio' 
+        ORDER BY data_hora ASC;
+    `;
+    const [bloqueios] = await connection.execute(query);
+    return bloqueios;
+};
+
+const patchAgendamento = async (id, agendamentoData) => {
+    // Pega as chaves dos campos que foram enviados (ex: ['status'])
+    const keys = Object.keys(agendamentoData);
+
+    // Cria a string "SET" da query, ex: "status = ?"
+    const setClause = keys.map((key) => `${key} = ?`).join(', ');
+
+    // Se nenhum dado for enviado para atualizar, não faz nada.
+    if (keys.length === 0) {
+        return { affectedRows: 0 };
+    }
+
+    // Pega os valores correspondentes (ex: ['Concluído'])
+    const values = Object.values(agendamentoData);
+
+    const query = `UPDATE agendamentos SET ${setClause} WHERE id = ?`;
+
+    // Executa a query com os valores + o id no final
+    const [result] = await connection.execute(query, [...values, id]);
+    return result;
 };
 
 module.exports = {
@@ -181,5 +237,8 @@ module.exports = {
     getStatusStatsThisWeek,
     getFaturamentoSemana,
     getRevenuePerDayOfWeek,
-    getUniqueClientes
+    getUniqueClientes,
+    createBloqueio,
+    getAllBloqueios,
+    patchAgendamento
 };

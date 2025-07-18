@@ -7,6 +7,8 @@ const usuarioController = require('./controllers/usuarioController');
 const dashboardController = require('./controllers/dashboardController');
 const servicoController = require('./controllers/servicoController');
 const clienteController = require('./controllers/clienteController');
+const configuracaoController = require('./controllers/configuracaoController');
+const bloqueioController = require('./controllers/bloqueioController');
 
 // Middlewares
 const agendamentoMiddlewares = require('./middlewares/agendamentoMiddlewares');
@@ -64,5 +66,17 @@ router.get('/dashboard/faturamento', authMiddleware, dashboardController.getFatu
 router.get('/dashboard/revenue-stats', authMiddleware, dashboardController.getRevenueStats);
 
 router.get('/clientes', authMiddleware, clienteController.getAllClientes);
+
+router.post('/servicos', authMiddleware, servicoController.createServico);
+router.put('/servicos/:id', authMiddleware, servicoController.updateServico);
+router.delete('/servicos/:id', authMiddleware, servicoController.deleteServico);
+
+router.get('/configuracoes', authMiddleware, configuracaoController.getSettings);
+router.put('/configuracoes', authMiddleware, configuracaoController.updateSettings);
+
+router.post('/bloqueios', authMiddleware, bloqueioController.createBloqueio);
+router.get('/bloqueios', authMiddleware, bloqueioController.getAllBloqueios);
+
+router.patch('/agendamentos/:id/status', authMiddleware, agendamentoController.updateStatus);
 
 module.exports = router;

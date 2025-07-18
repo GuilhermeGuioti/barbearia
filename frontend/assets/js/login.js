@@ -33,7 +33,6 @@ document.addEventListener('DOMContentLoaded', () => {
             localStorage.setItem('authToken', data.token);
 
             // 4. Redireciona o usuário para a página do painel de controle
-            alert('Login realizado com sucesso!');
             window.location.href = 'painel.html'; // Vamos criar esta página a seguir
 
         } catch (error) {

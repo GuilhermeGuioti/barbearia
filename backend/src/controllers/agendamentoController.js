@@ -72,9 +72,30 @@ const updateAgendamento = async (request, response) => {
     }
 };
 
+const updateStatus = async (request, response) => {
+    try {
+        const { id } = request.params;
+        const { status } = request.body;
+
+        if (!status) {
+            return response.status(400).json({ message: 'O campo "status" é obrigatório.' });
+        }
+
+        // AQUI ESTÁ A CORREÇÃO: Chamando a nova e flexível função patchAgendamento
+        await agendamentoModel.patchAgendamento(id, { status });
+
+        return response.status(204).send();
+
+    } catch (error) {
+        console.error('Erro ao atualizar status:', error);
+        return response.status(500).json({ message: 'Erro interno no servidor' });
+    }
+};
+
 module.exports = {
     createAgendamento,
     getAllAgendamentos,
     deleteAgendamento,
     updateAgendamento,
+    updateStatus
 };
